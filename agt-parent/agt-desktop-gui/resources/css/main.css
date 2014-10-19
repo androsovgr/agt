@@ -1,0 +1,11 @@
+@CHARSET "UTF-8";
+
+.list-cell {
+	-fx-background-color: inherit;
+}
+
+.list-cell:empty {
+	-fx-min-height: 0px;
+	-fx-max-height: 0px;
+	-fx-pref-height: 0px;
+}

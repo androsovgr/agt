@@ -38,7 +38,8 @@ public class ServerInteractor {
 		contactsOnline.add(new Contact(0, "Петя", null));
 		contactsOnline.add(new Contact(1, "Вася", null));
 		List<Contact> contactsOffline = new ArrayList<Contact>();
-		contactsOnline.add(new Contact(0, "Маша", null));
+		contactsOffline.add(new Contact(0, "Маша", null));
+
 		response = new ContactListResponse(contactsOnline, contactsOffline);
 
 		return response;
