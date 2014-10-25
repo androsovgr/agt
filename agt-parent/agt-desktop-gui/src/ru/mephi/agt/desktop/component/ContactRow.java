@@ -14,12 +14,16 @@ public class ContactRow extends HBox {
 		super();
 		this.contactModel = contactModel;
 		String imagePath = null;
-		if (contactModel.getStatus() == Status.ONLINE) {
-			imagePath = "file:resources/images/on.png";
-		} else if (contactModel.getStatus() == Status.OFFLINE) {
-			imagePath = "file:resources/images/off.png";
+		if (!contactModel.isAreNewMessages()) {
+			if (contactModel.getStatus() == Status.ONLINE) {
+				imagePath = "file:resources/images/on.png";
+			} else if (contactModel.getStatus() == Status.OFFLINE) {
+				imagePath = "file:resources/images/off.png";
+			} else {
+				imagePath = "file:resources/images/unknown.png";
+			}
 		} else {
-			imagePath = "file:resources/images/unknown.png";
+			imagePath = "file:resources/images/message.png";
 		}
 
 		this.getChildren().add(new ImageView(imagePath));

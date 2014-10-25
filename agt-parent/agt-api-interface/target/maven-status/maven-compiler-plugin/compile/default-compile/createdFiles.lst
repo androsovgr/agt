@@ -1,4 +1,6 @@
 ru\mephi\agt\_interface\request\LoginRequest.class
 ru\mephi\agt\_interface\response\LoginResponse.class
 ru\mephi\agt\_interface\ApiInterface.class
+ru\mephi\agt\_interface\request\GuiRequest.class
+ru\mephi\agt\_interface\response\MessageListResponse.class
 ru\mephi\agt\_interface\response\ContactListResponse.class

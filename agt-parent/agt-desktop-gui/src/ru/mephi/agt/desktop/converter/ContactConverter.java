@@ -14,6 +14,7 @@ public class ContactConverter {
 		if (contact != null) {
 			contactModel = new ContactModel();
 			contactModel.setDisplayName(contact.getDisplayName());
+			contactModel.setIdProperty(contact.getContactId());
 		}
 
 		return contactModel;

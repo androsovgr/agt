@@ -1,6 +1,8 @@
 package ru.mephi.agt.desktop.model;
 
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -8,6 +10,9 @@ import ru.mephi.agt.model.Status;
 
 public class ContactModel {
 
+	private boolean areNewMessages;
+
+	private LongProperty idProperty;
 	private StringProperty displayNameProperty;
 	private ObjectProperty<Status> statusProperty;
 
@@ -47,13 +52,14 @@ public class ContactModel {
 	}
 
 	public ContactModel() {
-		this(null, null);
+		this(null, null, -1L);
 	}
 
-	public ContactModel(String displayName, Status status) {
+	public ContactModel(String displayName, Status status, Long id) {
 		super();
 		this.displayNameProperty = new SimpleStringProperty(displayName);
 		this.statusProperty = new SimpleObjectProperty<Status>(status);
+		this.idProperty = new SimpleLongProperty(id);
 	}
 
 	public Status getStatus() {
@@ -62,8 +68,10 @@ public class ContactModel {
 
 	@Override
 	public String toString() {
-		return "ContactModel [displayNameProperty=" + displayNameProperty
-				+ ", statusProperty=" + statusProperty + "]";
+		return "ContactModel [areNewMessages=" + areNewMessages
+				+ ", idProperty=" + idProperty + ", displayNameProperty="
+				+ displayNameProperty + ", statusProperty=" + statusProperty
+				+ "]";
 	}
 
 	public void setStatus(Status status) {
@@ -81,4 +89,25 @@ public class ContactModel {
 	public StringProperty displayNameProperty() {
 		return displayNameProperty;
 	}
+
+	public boolean isAreNewMessages() {
+		return areNewMessages;
+	}
+
+	public void setAreNewMessages(boolean areNewMessages) {
+		this.areNewMessages = areNewMessages;
+	}
+
+	public long getIdProperty() {
+		return idProperty.get();
+	}
+
+	public void setIdProperty(long idProperty) {
+		this.idProperty.set(idProperty);
+	}
+
+	public LongProperty idProperty() {
+		return idProperty;
+	}
+
 }
