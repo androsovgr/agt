@@ -1,7 +1,9 @@
 package ru.mephi.agt.desktop.model;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -10,8 +12,7 @@ import ru.mephi.agt.model.Status;
 
 public class ContactModel {
 
-	private boolean areNewMessages;
-
+	private BooleanProperty newMessagesProperty;
 	private LongProperty idProperty;
 	private StringProperty displayNameProperty;
 	private ObjectProperty<Status> statusProperty;
@@ -52,14 +53,16 @@ public class ContactModel {
 	}
 
 	public ContactModel() {
-		this(null, null, -1L);
+		this(null, null, -1L, false);
 	}
 
-	public ContactModel(String displayName, Status status, Long id) {
+	public ContactModel(String displayName, Status status, Long id,
+			boolean newMessages) {
 		super();
 		this.displayNameProperty = new SimpleStringProperty(displayName);
 		this.statusProperty = new SimpleObjectProperty<Status>(status);
 		this.idProperty = new SimpleLongProperty(id);
+		this.newMessagesProperty = new SimpleBooleanProperty(newMessages);
 	}
 
 	public Status getStatus() {
@@ -68,7 +71,7 @@ public class ContactModel {
 
 	@Override
 	public String toString() {
-		return "ContactModel [areNewMessages=" + areNewMessages
+		return "ContactModel [newMessagesProperty=" + newMessagesProperty
 				+ ", idProperty=" + idProperty + ", displayNameProperty="
 				+ displayNameProperty + ", statusProperty=" + statusProperty
 				+ "]";
@@ -76,6 +79,10 @@ public class ContactModel {
 
 	public void setStatus(Status status) {
 		this.statusProperty.set(status);
+	}
+
+	public ObjectProperty<Status> statusProperty() {
+		return statusProperty;
 	}
 
 	public String getDisplayName() {
@@ -90,15 +97,19 @@ public class ContactModel {
 		return displayNameProperty;
 	}
 
-	public boolean isAreNewMessages() {
-		return areNewMessages;
+	public boolean isNewMessages() {
+		return newMessagesProperty.getValue();
 	}
 
-	public void setAreNewMessages(boolean areNewMessages) {
-		this.areNewMessages = areNewMessages;
+	public void setNewMessages(boolean areNewMessages) {
+		this.newMessagesProperty.set(areNewMessages);
 	}
 
-	public long getIdProperty() {
+	public BooleanProperty newMessagesProperty() {
+		return newMessagesProperty;
+	}
+
+	public long getId() {
 		return idProperty.get();
 	}
 

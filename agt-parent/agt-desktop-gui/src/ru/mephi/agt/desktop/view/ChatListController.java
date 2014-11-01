@@ -1,43 +1,46 @@
 package ru.mephi.agt.desktop.view;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.layout.AnchorPane;
 import ru.mephi.agt.desktop.MainApp;
 import ru.mephi.agt.desktop.constants.ViewPathConstant;
 import ru.mephi.agt.desktop.model.ContactModel;
+import ru.mephi.agt.desktop.model.bean.MessageTabControllerBean;
 import ru.mephi.agt.model.Message;
 
 public class ChatListController {
 
 	@FXML
 	private TabPane chatList;
-	private List<ContactModel> chatReference = new ArrayList<ContactModel>();
-	private Map<Long, MessagesController> messageControllerMap = new HashMap<Long, MessagesController>();
+	private Map<Long, MessageTabControllerBean> messageTabControllerMap = new HashMap<Long, MessageTabControllerBean>();
 
 	@FXML
 	private void initialize() {
+		chatList.tabClosingPolicyProperty().set(TabClosingPolicy.ALL_TABS);
 	}
 
 	public void startChat(ContactModel contactModel) throws IOException {
-		int index = chatReference.indexOf(contactModel);
-		if (index < 0) {
-			startNewChat(contactModel);
-		} else {
+		if (messageTabControllerMap.containsKey(contactModel.getId())) {
 			showOldChat(contactModel);
+		} else {
+			startNewChat(contactModel);
 		}
 	}
 
 	private void startNewChat(ContactModel contactModel) throws IOException {
 		Tab newTab = new Tab(contactModel.getDisplayName());
+		newTab.setUserData(contactModel);
+		newTab.setClosable(true);
+		newTab.onClosedProperty().set(e -> closeTab(e));
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(MainApp.class
 				.getResource(ViewPathConstant.MESSAGES_VIEW_PATH));
@@ -45,28 +48,33 @@ public class ChatListController {
 		newTab.setContent(rootLayout);
 		chatList.getTabs().add(newTab);
 		chatList.getSelectionModel().select(newTab);
-		chatReference.add(contactModel);
 		//
 		MessagesController messagesController = loader.getController();
 		messagesController.setContact(contactModel);
-		messageControllerMap.put(contactModel.getIdProperty(),
-				messagesController);
+		messageTabControllerMap.put(contactModel.getId(),
+				new MessageTabControllerBean(newTab, messagesController));
+	}
+
+	private void closeTab(Event e) {
+		Tab tab = (Tab) e.getSource();
+		ContactModel contactModel = (ContactModel) tab.getUserData();
+		messageTabControllerMap.remove(contactModel.getId());
 	}
 
 	private void showOldChat(ContactModel contactModel) {
-		int index = chatReference.indexOf(contactModel);
-		chatList.getSelectionModel().select(index);
+		Tab tab = messageTabControllerMap.get(contactModel.getId()).getTab();
+		chatList.getSelectionModel().select(tab);
 	}
 
 	public void handleMessage(ContactModel contactModel, Message message)
 			throws IOException {
-		MessagesController messageController = messageControllerMap
-				.get(contactModel.getIdProperty());
-		if (messageController == null) {
+		if (!messageTabControllerMap.containsKey(contactModel.getId())) {
 			startNewChat(contactModel);
-			messageController = messageControllerMap.get(contactModel
-					.getIdProperty());
 		}
+		MessageTabControllerBean messageTabControllerBean = messageTabControllerMap
+				.get(contactModel.getId());
+		MessagesController messageController = messageTabControllerBean
+				.getController();
 		messageController.handleMessage(message.getMessageTime(),
 				message.getMessage());
 	}

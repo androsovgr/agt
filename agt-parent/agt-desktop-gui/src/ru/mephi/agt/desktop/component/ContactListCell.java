@@ -9,6 +9,7 @@ import ru.mephi.agt.desktop.model.ContactModel;
 
 public class ContactListCell extends ListCell<ContactModel> {
 
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ContactListCell.class);
 

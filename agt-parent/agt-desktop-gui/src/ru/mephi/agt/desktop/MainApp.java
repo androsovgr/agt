@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -20,9 +19,9 @@ import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ru.mephi.agt._interface.request.GuiRequest;
-import ru.mephi.agt._interface.response.ContactListResponse;
-import ru.mephi.agt._interface.response.MessageListResponse;
+import ru.mephi.agt.api.request.GuiRequest;
+import ru.mephi.agt.api.response.ContactListResponse;
+import ru.mephi.agt.api.response.MessageListResponse;
 import ru.mephi.agt.desktop.constants.ViewPathConstant;
 import ru.mephi.agt.desktop.converter.ContactConverter;
 import ru.mephi.agt.desktop.model.ContactModel;
@@ -42,6 +41,7 @@ public class MainApp extends Application {
 	private Stage dialogStage;
 	private ChatListController chatListController;
 	private ContactsController contactsController;
+	private HashMap<Long, ContactModel> contactMap = new HashMap<Long, ContactModel>();
 
 	public static void main(String[] args) {
 		launch(args);
@@ -126,6 +126,10 @@ public class MainApp extends Application {
 				dialogStage.setScene(scene);
 			}
 
+			if (showWindow) {
+				contactModel.setNewMessages(false);
+			}
+
 			if (!dialogStage.isShowing() && showWindow) {
 				dialogStage.show();
 			}
@@ -140,44 +144,47 @@ public class MainApp extends Application {
 
 	public void updateAll() {
 		try {
-			Map<Long, ContactModel> contacts = getContactList();
 			List<Message> messages = getMessages();
-			updateContactList(contacts, messages);
-			updateChats(contacts, messages);
+			List<ContactModel> delta2 = updateContactMap();
+			List<ContactModel> delta = addReceivedMessagesForContactMap(messages);
+			delta.addAll(delta2);
+			contactsController.updateContactList(delta);
+			updateChats(messages);
 		} catch (Exception e) {
 			LOGGER.error("Can't update all", e);
 		}
 	}
 
-	private void updateContactList(Map<Long, ContactModel> contacts,
+	private List<ContactModel> addReceivedMessagesForContactMap(
 			List<Message> messages) {
+		List<ContactModel> delta = new ArrayList<ContactModel>();
 		for (Message message : messages) {
 			// Add to map
-			ContactModel contact = contacts.get(message);
+			ContactModel contact = contactMap.get(message.getMessageSender());
 			if (contact == null) {
 				contact = new ContactModel();
 				contact.setDisplayName(message.getMessageSender() + "");
 				contact.setIdProperty(message.getMessageSender());
 				contact.setStatus(Status.UNKNOWN);
-				contacts.put(message.getMessageSender(), contact);
+				contactMap.put(message.getMessageSender(), contact);
+				delta.add(contact);
 			}
-			contact.setAreNewMessages(true);
+			contact.setNewMessages(true);
 		}
-		List<ContactModel> contactModels = new ArrayList<ContactModel>(
-				contacts.values());
-		contactsController.updateContactList(contactModels);
+		return delta;
 	}
 
-	private void updateChats(Map<Long, ContactModel> contacts,
-			List<Message> messages) throws IOException {
+	private void updateChats(List<Message> messages) throws IOException {
 		for (Message message : messages) {
-			ContactModel contact = contacts.get(message.getMessageSender());
+			ContactModel contact = contactMap.get(message.getMessageSender());
 			startChatWith(contact, false);
 			chatListController.handleMessage(contact, message);
 		}
 	}
 
-	private Map<Long, ContactModel> getContactList() {
+	private List<ContactModel> updateContactMap() {
+		List<ContactModel> delta = new ArrayList<ContactModel>();
+
 		ContactListResponse response = ServerInteractor.getContacts();
 		if (response != null) {
 			// ONLINE
@@ -197,16 +204,27 @@ public class MainApp extends Application {
 			}
 
 			// COMPOSE
-			Map<Long, ContactModel> allMap = new HashMap<Long, ContactModel>();
 			for (ContactModel contactModel : onlineContactModels) {
-				allMap.put(contactModel.getIdProperty(), contactModel);
+				if (!contactMap.containsKey(contactModel.getId())) {
+					contactMap.put(contactModel.getId(), contactModel);
+					delta.add(contactModel);
+				} else {
+					contactMap.get(contactModel.getId()).setStatus(
+							contactModel.getStatus());
+				}
 			}
 			for (ContactModel contactModel : offlineContactModels) {
-				allMap.put(contactModel.getIdProperty(), contactModel);
+				if (!contactMap.containsKey(contactModel.getId())) {
+					contactMap.put(contactModel.getId(), contactModel);
+					delta.add(contactModel);
+				} else {
+					contactMap.get(contactModel.getId()).setStatus(
+							contactModel.getStatus());
+				}
 			}
-			return allMap;
 		}
-		return null;
+
+		return delta;
 	}
 
 	private List<Message> getMessages() {

@@ -8,14 +8,16 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ru.mephi.agt._interface.request.BaseResponse;
-import ru.mephi.agt._interface.request.GuiRequest;
-import ru.mephi.agt._interface.response.ContactListResponse;
-import ru.mephi.agt._interface.response.LoginResponse;
-import ru.mephi.agt._interface.response.MessageListResponse;
+import ru.mephi.agt.api.request.GuiRequest;
+import ru.mephi.agt.api.response.ContactListResponse;
+import ru.mephi.agt.api.response.LoginResponse;
+import ru.mephi.agt.api.response.MessageListResponse;
 import ru.mephi.agt.desktop.model.ContactModel;
 import ru.mephi.agt.model.Contact;
 import ru.mephi.agt.model.Message;
+import ru.mephi.agt.model.User;
+import ru.mephi.agt.request.BaseResponse;
+import ru.mephi.agt.response.UserListResponse;
 
 public class ServerInteractor {
 
@@ -69,6 +71,22 @@ public class ServerInteractor {
 		}
 		MessageListResponse response = new MessageListResponse(messages);
 		LOGGER.info("Total got messages: {}", messages.size());
+
+		return response;
+	}
+
+	public static UserListResponse searchUsers(GuiRequest guiRequest) {
+		List<User> users = new ArrayList<User>();
+		User user = new User();
+		user.setUserId(1);
+		user.setNickName("Василий");
+		users.add(user);
+		user = new User();
+		user.setUserId(2);
+		user.setNickName(UUID.randomUUID().toString());
+		users.add(user);
+		UserListResponse response = new UserListResponse(users);
+		LOGGER.info("Total got users: {}", users.size());
 
 		return response;
 	}

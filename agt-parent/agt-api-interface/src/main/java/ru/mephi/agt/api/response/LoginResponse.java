@@ -1,6 +1,6 @@
-package ru.mephi.agt._interface.response;
+package ru.mephi.agt.api.response;
 
-import ru.mephi.agt._interface.request.BaseResponse;
+import ru.mephi.agt.request.BaseResponse;
 import ru.mephi.agt.util.ErrorCode;
 
 public class LoginResponse extends BaseResponse {

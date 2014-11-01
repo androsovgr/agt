@@ -14,7 +14,7 @@ public class ContactRow extends HBox {
 		super();
 		this.contactModel = contactModel;
 		String imagePath = null;
-		if (!contactModel.isAreNewMessages()) {
+		if (!contactModel.isNewMessages()) {
 			if (contactModel.getStatus() == Status.ONLINE) {
 				imagePath = "file:resources/images/on.png";
 			} else if (contactModel.getStatus() == Status.OFFLINE) {

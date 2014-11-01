@@ -1,4 +1,4 @@
-package ru.mephi.agt._interface.request;
+package ru.mephi.agt.request;
 
 import java.util.UUID;
 

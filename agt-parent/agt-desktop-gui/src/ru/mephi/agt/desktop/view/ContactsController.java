@@ -1,17 +1,15 @@
 package ru.mephi.agt.desktop.view;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
-import javafx.util.Callback;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import ru.mephi.agt.desktop.MainApp;
 import ru.mephi.agt.desktop.component.ContactListCell;
 import ru.mephi.agt.desktop.model.ContactModel;
+import ru.mephi.agt.desktop.model.extractor.ContactExtractor;
 import ru.mephi.agt.model.Status;
 
 public class ContactsController {
@@ -27,77 +26,69 @@ public class ContactsController {
 			.getLogger(ContactsController.class);
 
 	@FXML
-	private ListView<ContactModel> onlineList;
+	private ListView<ContactModel> onlineListView;
 
 	@FXML
-	private ListView<ContactModel> offlineList;
+	private ListView<ContactModel> offlineListView;
 
 	@FXML
-	private ListView<ContactModel> unknownList;
+	private ListView<ContactModel> unknownListView;
+
+	private MainApp mainApp;
+
+	private ObservableList<ContactModel> onlineList;
+	private ObservableList<ContactModel> unknownList;
+	private ObservableList<ContactModel> offlineList;
 
 	@FXML
 	private void initialize() {
 		addHandlersForLists();
+		addCellFactoriesForLists();
+		onlineList = FXCollections.observableArrayList(new ContactExtractor());
+		onlineListView.setItems(onlineList);
+		onlineListView.getSelectionModel().setSelectionMode(
+				SelectionMode.SINGLE);
+		offlineList = FXCollections.observableArrayList(new ContactExtractor());
+		offlineListView.setItems(offlineList);
+		offlineListView.getSelectionModel().setSelectionMode(
+				SelectionMode.SINGLE);
+		unknownList = FXCollections.observableArrayList(new ContactExtractor());
+		unknownListView.setItems(unknownList);
+		unknownListView.getSelectionModel().setSelectionMode(
+				SelectionMode.SINGLE);
+
 	}
 
-	private MainApp mainApp;
+	public void updateContactList(List<ContactModel> delta) {
+		selectionHandler(delta);
+		checkStatusChangeWithReplace();
+	}
 
-	public void updateContactList(List<ContactModel> contactModels) {
-		List<ContactModel> onlineContactModels = new ArrayList<ContactModel>();
-		for (ContactModel contactModel : contactModels) {
-			if (contactModel.getStatus().equals(Status.ONLINE)) {
-				onlineContactModels.add(contactModel);
-			}
-		}
-		onlineList.setItems(FXCollections
-				.observableArrayList(onlineContactModels));
-		onlineList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-		onlineList
-				.setCellFactory(new Callback<ListView<ContactModel>, ListCell<ContactModel>>() {
-					@Override
-					public ListCell<ContactModel> call(
-							ListView<ContactModel> param) {
-						return new ContactListCell();
-					}
-				});
-		// OFFLINE
+	private void checkStatusChangeWithReplace() {
+		checkStatusChangeWithReplaceForList(onlineList, Status.ONLINE);
+		checkStatusChangeWithReplaceForList(offlineList, Status.OFFLINE);
+		checkStatusChangeWithReplaceForList(unknownList, Status.UNKNOWN);
+	}
 
-		List<ContactModel> offlineContactModels = new ArrayList<ContactModel>();
-		for (ContactModel contactModel : contactModels) {
-			if (contactModel.getStatus().equals(Status.OFFLINE)) {
-				offlineContactModels.add(contactModel);
+	private void checkStatusChangeWithReplaceForList(
+			ObservableList<ContactModel> list, Status status) {
+		for (Iterator<ContactModel> iterator = list.iterator(); iterator
+				.hasNext();) {
+			ContactModel contactModel = iterator.next();
+			if (contactModel.getStatus() != status) {
+				iterator.remove();
+				if (contactModel.getStatus() == Status.ONLINE) {
+					onlineList.add(contactModel);
+				} else if (contactModel.getStatus() == Status.OFFLINE) {
+					offlineList.add(contactModel);
+				} else if (contactModel.getStatus() == Status.UNKNOWN) {
+					unknownList.add(contactModel);
+				} else {
+					LOGGER.warn("Unknown type of model: {}", contactModel);
+				}
 			}
-		}
-		offlineList.setItems(FXCollections
-				.observableArrayList(offlineContactModels));
-		offlineList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-		offlineList
-				.setCellFactory(new Callback<ListView<ContactModel>, ListCell<ContactModel>>() {
-					@Override
-					public ListCell<ContactModel> call(
-							ListView<ContactModel> param) {
-						return new ContactListCell();
-					}
-				});
 
-		// UNKNOWN
-		List<ContactModel> unknownContactModels = new ArrayList<ContactModel>();
-		for (ContactModel contactModel : contactModels) {
-			if (contactModel.getStatus().equals(Status.UNKNOWN)) {
-				unknownContactModels.add(contactModel);
-			}
 		}
-		unknownList.setItems(FXCollections
-				.observableArrayList(unknownContactModels));
-		unknownList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-		unknownList
-				.setCellFactory(new Callback<ListView<ContactModel>, ListCell<ContactModel>>() {
-					@Override
-					public ListCell<ContactModel> call(
-							ListView<ContactModel> param) {
-						return new ContactListCell();
-					}
-				});
 	}
 
 	@FXML
@@ -121,65 +112,87 @@ public class ContactsController {
 	}
 
 	private ContactModel getSelected() {
-		ContactModel selected = onlineList.getSelectionModel()
+		ContactModel selected = onlineListView.getSelectionModel()
 				.getSelectedItem();
 		if (selected == null) {
-			selected = offlineList.getSelectionModel().getSelectedItem();
+			selected = offlineListView.getSelectionModel().getSelectedItem();
 		}
 		if (selected == null) {
-			selected = unknownList.getSelectionModel().getSelectedItem();
+			selected = unknownListView.getSelectionModel().getSelectedItem();
 		}
 		return selected;
 	}
 
 	private void addHandlersForLists() {
-		onlineList.getSelectionModel().selectedItemProperty()
-				.addListener(new ChangeListener<ContactModel>() {
-					@Override
-					public void changed(
-							ObservableValue<? extends ContactModel> observable,
-							ContactModel oldValue, ContactModel newValue) {
-						if (newValue != null) {
-							dropOtherSelection(onlineList);
-						}
-					}
-				});
-		offlineList.getSelectionModel().selectedItemProperty()
-				.addListener(new ChangeListener<ContactModel>() {
-					@Override
-					public void changed(
-							ObservableValue<? extends ContactModel> observable,
-							ContactModel oldValue, ContactModel newValue) {
-						if (newValue != null) {
-							dropOtherSelection(offlineList);
-						}
-					}
-				});
-		unknownList.getSelectionModel().selectedItemProperty()
-				.addListener(new ChangeListener<ContactModel>() {
-					@Override
-					public void changed(
-							ObservableValue<? extends ContactModel> observable,
-							ContactModel oldValue, ContactModel newValue) {
-						if (newValue != null) {
-							dropOtherSelection(unknownList);
-						}
-					}
-				});
+		onlineListView
+				.getSelectionModel()
+				.selectedItemProperty()
+				.addListener(
+						(observable, oldValue, newValue) -> dropOtherSelection(
+								newValue, onlineListView));
+		offlineListView
+				.getSelectionModel()
+				.selectedItemProperty()
+				.addListener(
+						(observable, oldValue, newValue) -> dropOtherSelection(
+								newValue, offlineListView));
+		unknownListView
+				.getSelectionModel()
+				.selectedItemProperty()
+				.addListener(
+						(observable, oldValue, newValue) -> dropOtherSelection(
+								newValue, unknownListView));
 	}
 
-	private void dropOtherSelection(ListView<ContactModel> listView) {
-		if (!offlineList.getId().equals(listView.getId())) {
-			offlineList.getSelectionModel().clearSelection();
-			LOGGER.info("Cleared offline");
+	private void addCellFactoriesForLists() {
+		onlineListView.setCellFactory(column -> new ContactListCell());
+		offlineListView.setCellFactory(column -> new ContactListCell());
+		unknownListView.setCellFactory(column -> new ContactListCell());
+	}
+
+	private void dropOtherSelection(ContactModel newValue,
+			ListView<ContactModel> listView) {
+		if (newValue != null) {
+			if (!offlineListView.getId().equals(listView.getId())) {
+				offlineListView.getSelectionModel().clearSelection();
+				LOGGER.info("Cleared offline");
+			}
+			if (!onlineListView.getId().equals(listView.getId())) {
+				onlineListView.getSelectionModel().clearSelection();
+				LOGGER.info("Cleared online");
+			}
+			if (!unknownListView.getId().equals(listView.getId())) {
+				unknownListView.getSelectionModel().clearSelection();
+			}
 		}
-		if (!onlineList.getId().equals(listView.getId())) {
-			onlineList.getSelectionModel().clearSelection();
-			LOGGER.info("Cleared online");
+	}
+
+	private void selectionHandler(List<ContactModel> delta) {
+		List<ContactModel> onlineContactModels = new ArrayList<ContactModel>();
+		for (ContactModel contactModel : delta) {
+			if (contactModel.getStatus().equals(Status.ONLINE)) {
+				onlineContactModels.add(contactModel);
+			}
 		}
-		if (!unknownList.getId().equals(listView.getId())) {
-			unknownList.getSelectionModel().clearSelection();
+		onlineList.addAll(onlineContactModels);
+
+		// OFFLINE
+
+		List<ContactModel> offlineContactModels = new ArrayList<ContactModel>();
+		for (ContactModel contactModel : delta) {
+			if (contactModel.getStatus().equals(Status.OFFLINE)) {
+				offlineContactModels.add(contactModel);
+			}
 		}
+		offlineList.addAll(offlineContactModels);
+		// UNKNOWN
+		List<ContactModel> unknownContactModels = new ArrayList<ContactModel>();
+		for (ContactModel contactModel : delta) {
+			if (contactModel.getStatus().equals(Status.UNKNOWN)) {
+				unknownContactModels.add(contactModel);
+			}
+		}
+		unknownList.addAll(unknownContactModels);
 	}
 
 	public void setMainApp(MainApp mainApp) {

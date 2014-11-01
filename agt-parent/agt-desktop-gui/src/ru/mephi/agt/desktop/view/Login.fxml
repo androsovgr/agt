@@ -24,8 +24,8 @@
                   <Label contentDisplay="RIGHT" text="ID:" />
                   <Label text="Пароль:" GridPane.rowIndex="1" />
                   <TextField fx:id="idField" GridPane.columnIndex="1" />
-                  <Button fx:id="loginButton" mnemonicParsing="false" onAction="#login" text="Войти" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <PasswordField fx:id="passwordField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button fx:id="loginButton" mnemonicParsing="false" onAction="#login" text="Войти" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Hyperlink fx:id="registerHyperlink" onAction="#registerPaneSwitch" text="Регистрация" GridPane.rowIndex="2" />
                </children>
             </GridPane>

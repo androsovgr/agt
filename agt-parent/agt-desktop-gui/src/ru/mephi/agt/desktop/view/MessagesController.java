@@ -11,14 +11,15 @@ import javafx.scene.text.TextFlow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ru.mephi.agt._interface.request.BaseResponse;
 import ru.mephi.agt.desktop.constants.StyleClassContstant;
 import ru.mephi.agt.desktop.model.ContactModel;
 import ru.mephi.agt.desktop.util.ControllerUtil;
 import ru.mephi.agt.desktop.util.ServerInteractor;
+import ru.mephi.agt.request.BaseResponse;
 
 public class MessagesController {
 
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(MessagesController.class);
 

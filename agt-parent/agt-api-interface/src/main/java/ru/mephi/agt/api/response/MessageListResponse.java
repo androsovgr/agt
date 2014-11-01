@@ -1,9 +1,9 @@
-package ru.mephi.agt._interface.response;
+package ru.mephi.agt.api.response;
 
 import java.util.List;
 
-import ru.mephi.agt._interface.request.BaseResponse;
 import ru.mephi.agt.model.Message;
+import ru.mephi.agt.request.BaseResponse;
 import ru.mephi.agt.util.ErrorCode;
 
 public class MessageListResponse extends BaseResponse {

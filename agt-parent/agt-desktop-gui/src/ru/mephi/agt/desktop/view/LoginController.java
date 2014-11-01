@@ -44,6 +44,9 @@ public class LoginController {
 	private void initialize() {
 		registerPane.setVisible(false);
 		registerPane.setManaged(false);
+		// TODO: remove it
+		idField.setText("1");
+		passwordField.setText("pass");
 	}
 
 	/**
@@ -65,7 +68,7 @@ public class LoginController {
 		} else {
 			ServerInteractor.login(login, password);
 			// TODO: if logined
-			mainApp.initContacts();	
+			mainApp.initContacts();
 		}
 	}
 
