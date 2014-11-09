@@ -9,3 +9,9 @@
 	-fx-max-height: 0px;
 	-fx-pref-height: 0px;
 }
+
+.table-row-cell:empty {
+	-fx-min-height: 0px;
+	-fx-max-height: 0px;
+	-fx-pref-height: 0px;
+}

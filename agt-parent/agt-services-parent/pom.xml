@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>ru.mephi.agt</groupId>
+		<artifactId>agt-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>agt-services-parent</artifactId>
+	<packaging>pom</packaging>
+	<modules>
+		<module>agt-service-login</module>
+		<module>agt-service-db</module>
+	</modules>
+	<dependencies>
+		<dependency>
+			<groupId>ru.mephi.agt</groupId>
+			<artifactId>agt-common-beans</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.ejb</groupId>
+			<artifactId>javax.ejb-api</artifactId>
+			<version>3.2</version>
+		</dependency>
+	</dependencies>
+
+</project>

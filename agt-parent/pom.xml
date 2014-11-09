@@ -9,9 +9,18 @@
 		<module>agt-common-beans</module>
 		<module>agt-api-interface</module>
 		<module>agt-desktop-gui</module>
+		<module>agt-api-service</module>
+		<module>agt-services-parent</module>
+		<module>agt-interfaces-parent</module>
+		<module>agt-ear</module>
 	</modules>
 
+	<properties>
+		<resteasy.version>3.0.10.Final</resteasy.version>
+	</properties>
+
 	<build>
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>

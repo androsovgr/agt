@@ -1,4 +1,4 @@
-package ru.mephi.agt.api.request;
+package ru.mephi.agt.request;
 
 import ru.mephi.agt.model.User;
 import ru.mephi.agt.request.BaseRequest;

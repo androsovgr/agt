@@ -13,6 +13,13 @@
 			<groupId>ru.mephi.agt</groupId>
 			<artifactId>agt-common-beans</artifactId>
 			<version>${project.parent.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-client</artifactId>
+			<version>${resteasy.version}</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>

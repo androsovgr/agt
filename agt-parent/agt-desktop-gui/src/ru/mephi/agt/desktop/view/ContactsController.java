@@ -111,6 +111,11 @@ public class ContactsController {
 		}
 	}
 
+	@FXML
+	private void startSearch() {
+		mainApp.showSearchStage();
+	}
+
 	private ContactModel getSelected() {
 		ContactModel selected = onlineListView.getSelectionModel()
 				.getSelectedItem();

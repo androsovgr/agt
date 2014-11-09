@@ -25,11 +25,13 @@ import ru.mephi.agt.api.response.MessageListResponse;
 import ru.mephi.agt.desktop.constants.ViewPathConstant;
 import ru.mephi.agt.desktop.converter.ContactConverter;
 import ru.mephi.agt.desktop.model.ContactModel;
+import ru.mephi.agt.desktop.model.UserModel;
 import ru.mephi.agt.desktop.util.ControllerUtil;
 import ru.mephi.agt.desktop.util.ServerInteractor;
 import ru.mephi.agt.desktop.view.ChatListController;
 import ru.mephi.agt.desktop.view.ContactsController;
 import ru.mephi.agt.desktop.view.LoginController;
+import ru.mephi.agt.desktop.view.SearchController;
 import ru.mephi.agt.model.Contact;
 import ru.mephi.agt.model.Message;
 import ru.mephi.agt.model.Status;
@@ -39,6 +41,7 @@ public class MainApp extends Application {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainApp.class);
 	private Stage stage;
 	private Stage dialogStage;
+	private Stage searchStage;
 	private ChatListController chatListController;
 	private ContactsController contactsController;
 	private HashMap<Long, ContactModel> contactMap = new HashMap<Long, ContactModel>();
@@ -106,10 +109,40 @@ public class MainApp extends Application {
 			stage.show();
 			updateAll();
 			initCheckMessagesThread();
-			System.out.println("inited");
 		} catch (IOException e) {
 			LOGGER.error("Can't find {}", ViewPathConstant.LOGIN_VIEW_PATH, e);
 		}
+	}
+
+	public void showSearchStage() {
+		try {
+			// Load root layout from fxml file.
+			if (searchStage == null) {
+				searchStage = new Stage();
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(MainApp.class
+						.getResource(ViewPathConstant.SEARCH_VIEW_PATH));
+				AnchorPane rootLayout = (AnchorPane) loader.load();
+				SearchController searchController = loader.getController();
+				searchController.setMainApp(this);
+				searchController.setStage(searchStage);
+				// Show the scene containing the root layout.
+				Scene scene = new Scene(rootLayout);
+				searchStage.setScene(scene);
+				searchStage.sizeToScene();
+			}
+			searchStage.show();
+		} catch (IOException e) {
+			LOGGER.error("Can't find {}", ViewPathConstant.SEARCH_VIEW_PATH, e);
+		}
+	}
+
+	public void startChatWith(UserModel userModel) {
+		ContactModel contactModel = contactMap.get(userModel.getId());
+		if (contactModel == null) {
+			contactModel = createEmptyContactById(userModel.getId());
+		}
+		startChatWith(contactModel, true);
 	}
 
 	public void startChatWith(ContactModel contactModel, boolean showWindow) {
@@ -122,6 +155,7 @@ public class MainApp extends Application {
 						.getResource(ViewPathConstant.CHAT_LIST_VIEW_PATH));
 				AnchorPane rootLayout = (AnchorPane) loader.load();
 				chatListController = loader.getController();
+				chatListController.setMainApp(this);
 				Scene scene = new Scene(rootLayout);
 				dialogStage.setScene(scene);
 			}
@@ -134,8 +168,8 @@ public class MainApp extends Application {
 				dialogStage.show();
 			}
 
-			chatListController.startChat(contactModel);
-			LOGGER.info("Try start chat with: {}", contactModel);
+			chatListController.startChat(contactModel, showWindow);
+			LOGGER.debug("Try start chat with: {}", contactModel);
 		} catch (Exception e) {
 			LOGGER.error("Can't sstart chat with: {}", contactModel);
 
@@ -162,16 +196,21 @@ public class MainApp extends Application {
 			// Add to map
 			ContactModel contact = contactMap.get(message.getMessageSender());
 			if (contact == null) {
-				contact = new ContactModel();
-				contact.setDisplayName(message.getMessageSender() + "");
-				contact.setIdProperty(message.getMessageSender());
-				contact.setStatus(Status.UNKNOWN);
-				contactMap.put(message.getMessageSender(), contact);
+				contact = createEmptyContactById(message.getMessageSender());
 				delta.add(contact);
 			}
 			contact.setNewMessages(true);
 		}
 		return delta;
+	}
+
+	private ContactModel createEmptyContactById(long id) {
+		ContactModel contact = new ContactModel();
+		contact.setDisplayName(id + "");
+		contact.setIdProperty(id);
+		contact.setStatus(Status.UNKNOWN);
+		contactMap.put(id, contact);
+		return contact;
 	}
 
 	private void updateChats(List<Message> messages) throws IOException {

@@ -5,8 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane maxHeight="400.0" maxWidth="600.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<AnchorPane maxHeight="400.0" maxWidth="600.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" stylesheets="@../../../../../../resources/css/main.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.mephi.agt.desktop.view.SearchController">
    <children>
       <VBox layoutX="184.0" layoutY="32.0" prefHeight="400.0" prefWidth="600.0" spacing="10.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <children>
@@ -33,38 +32,42 @@
                   <Label text="Город" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                   <Label text="Страна" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
                   <Label text="Пол" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-                  <TextField GridPane.columnIndex="1" />
-                  <TextField GridPane.columnIndex="3" />
-                  <TextField GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                  <TextField GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <DatePicker GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <ComboBox prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                  <Button mnemonicParsing="false" text="Искать" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                  <Hyperlink text="Очистить" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="idField" GridPane.columnIndex="1" />
+                  <TextField fx:id="nickField" GridPane.columnIndex="3" />
+                  <TextField fx:id="lastNameField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <TextField fx:id="cityField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                  <TextField fx:id="countryField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <DatePicker fx:id="birthDateField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <ComboBox fx:id="genderField" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                  <Button mnemonicParsing="false" onAction="#search" text="Искать" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                  <Hyperlink onAction="#clearFilters" text="Очистить" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+                  <TextField fx:id="firstNameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
             </GridPane>
-            <TableView prefHeight="240.0" prefWidth="590.0">
-              <columns>
-                <TableColumn prefWidth="75.0" text="ID" />
-                <TableColumn prefWidth="75.0" text="Никнэйм" />
-                  <TableColumn prefWidth="75.0" text="Имя" />
-                  <TableColumn prefWidth="75.0" text="Фамилия" />
-                  <TableColumn prefWidth="75.0" text="Дата рождения" />
-                  <TableColumn prefWidth="75.0" text="Город" />
-                  <TableColumn prefWidth="75.0" text="Страна" />
-                  <TableColumn prefWidth="64.0" text="Пол" />
-              </columns>
-               <contextMenu>
-                  <ContextMenu>
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Добавить" />
-                        <MenuItem mnemonicParsing="false" text="Начать чат" />
-                    </items>
-                  </ContextMenu>
-               </contextMenu>
-            </TableView>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <TableView fx:id="searchTable" prefHeight="240.0" prefWidth="590.0">
+                    <columns>
+                      <TableColumn fx:id="idColumn" prefWidth="75.0" text="ID" />
+                      <TableColumn fx:id="nickColumn" prefWidth="75.0" text="Никнэйм" />
+                        <TableColumn fx:id="firstNameColumn" prefWidth="75.0" text="Имя" />
+                        <TableColumn fx:id="lastNameColumn" prefWidth="75.0" text="Фамилия" />
+                        <TableColumn fx:id="birthDateColumn" prefWidth="75.0" text="Дата рождения" />
+                        <TableColumn fx:id="cityColumn" prefWidth="75.0" text="Город" />
+                        <TableColumn fx:id="countryColumn" prefWidth="75.0" text="Страна" />
+                        <TableColumn fx:id="genderColumn" prefWidth="64.0" text="Пол" />
+                    </columns>
+                     <contextMenu>
+                        <ContextMenu>
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#addToContactList" text="Добавить" />
+                              <MenuItem mnemonicParsing="false" onAction="#startChat" text="Начать чат" />
+                          </items>
+                        </ContextMenu>
+                     </contextMenu>
+                  </TableView>
+               </children>
+            </AnchorPane>
          </children>
       </VBox>
    </children>

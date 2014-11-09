@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="agt-ear-0.0.1-SNAPSHOT">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/ear-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/application" tag="defaultRootSource"/>
+        <dependent-module archiveName="agt-api-service.war" deploy-path="/" handle="module:/resource/agt-api-service/agt-api-service">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="agt-service-login.jar" deploy-path="/" handle="module:/resource/agt-service-login/agt-service-login">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="javax.ejb-api.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/javax/ejb/javax.ejb-api/3.2/javax.ejb-api-3.2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="javax.transaction-api.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/javax/transaction/javax.transaction-api/1.2/javax.transaction-api-1.2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="agt-common-beans.jar" deploy-path="/lib" handle="module:/resource/agt-common-beans/agt-common-beans">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    </wb-module>
+</project-modules>

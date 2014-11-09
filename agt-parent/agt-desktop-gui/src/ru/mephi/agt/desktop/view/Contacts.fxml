@@ -19,6 +19,7 @@
                                  <items>
                                     <MenuItem mnemonicParsing="false" onAction="#startChat" text="Начать чат" />
                                     <MenuItem mnemonicParsing="false" onAction="#showInfo" text="Личные данные" />
+                                    <MenuItem mnemonicParsing="false" onAction="#startSearch" text="Поиск" />
                                  </items>
                               </ContextMenu>
                            </contextMenu>
@@ -37,6 +38,7 @@
                                 <items>
                                   <MenuItem mnemonicParsing="false" onAction="#startChat" text="Начать чат" />
                                     <MenuItem mnemonicParsing="false" onAction="#showInfo" text="Личные данные" />
+                                    <MenuItem mnemonicParsing="false" onAction="#startSearch" text="Поиск" />
                                 </items>
                               </ContextMenu>
                            </contextMenu></ListView>
@@ -54,6 +56,7 @@
                                  <items>
                                     <MenuItem mnemonicParsing="false" onAction="#startChat" text="Начать чат" />
                                     <MenuItem mnemonicParsing="false" onAction="#showInfo" text="Личные данные" />
+                                    <MenuItem mnemonicParsing="false" onAction="#startSearch" text="Поиск" />
                                  </items>
                               </ContextMenu>
                            </contextMenu>

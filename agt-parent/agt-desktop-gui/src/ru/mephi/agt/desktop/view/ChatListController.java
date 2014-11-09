@@ -11,6 +11,9 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.layout.AnchorPane;
+
+import org.controlsfx.control.Notifications;
+
 import ru.mephi.agt.desktop.MainApp;
 import ru.mephi.agt.desktop.constants.ViewPathConstant;
 import ru.mephi.agt.desktop.model.ContactModel;
@@ -18,6 +21,8 @@ import ru.mephi.agt.desktop.model.bean.MessageTabControllerBean;
 import ru.mephi.agt.model.Message;
 
 public class ChatListController {
+
+	private MainApp mainApp;
 
 	@FXML
 	private TabPane chatList;
@@ -28,15 +33,19 @@ public class ChatListController {
 		chatList.tabClosingPolicyProperty().set(TabClosingPolicy.ALL_TABS);
 	}
 
-	public void startChat(ContactModel contactModel) throws IOException {
+	public void startChat(ContactModel contactModel, boolean showWindow)
+			throws IOException {
 		if (messageTabControllerMap.containsKey(contactModel.getId())) {
-			showOldChat(contactModel);
+			if (showWindow) {
+				showOldChat(contactModel);
+			}
 		} else {
-			startNewChat(contactModel);
+			startNewChat(contactModel, showWindow);
 		}
 	}
 
-	private void startNewChat(ContactModel contactModel) throws IOException {
+	private void startNewChat(ContactModel contactModel, boolean showWindow)
+			throws IOException {
 		Tab newTab = new Tab(contactModel.getDisplayName());
 		newTab.setUserData(contactModel);
 		newTab.setClosable(true);
@@ -47,8 +56,9 @@ public class ChatListController {
 		AnchorPane rootLayout = (AnchorPane) loader.load();
 		newTab.setContent(rootLayout);
 		chatList.getTabs().add(newTab);
-		chatList.getSelectionModel().select(newTab);
-		//
+		if (showWindow) {
+			chatList.getSelectionModel().select(newTab);
+		}
 		MessagesController messagesController = loader.getController();
 		messagesController.setContact(contactModel);
 		messageTabControllerMap.put(contactModel.getId(),
@@ -69,7 +79,7 @@ public class ChatListController {
 	public void handleMessage(ContactModel contactModel, Message message)
 			throws IOException {
 		if (!messageTabControllerMap.containsKey(contactModel.getId())) {
-			startNewChat(contactModel);
+			startNewChat(contactModel, false);
 		}
 		MessageTabControllerBean messageTabControllerBean = messageTabControllerMap
 				.get(contactModel.getId());
@@ -77,6 +87,13 @@ public class ChatListController {
 				.getController();
 		messageController.handleMessage(message.getMessageTime(),
 				message.getMessage());
+		Notifications.create().title(contactModel.getDisplayName())
+				.text(message.getMessage())
+				.onAction(ae -> mainApp.startChatWith(contactModel, true))
+				.showInformation();
 	}
 
+	public void setMainApp(MainApp mainApp) {
+		this.mainApp = mainApp;
+	}
 }

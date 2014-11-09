@@ -1,4 +1,4 @@
-package ru.mephi.agt.api.response;
+package ru.mephi.agt.response;
 
 import ru.mephi.agt.request.BaseResponse;
 import ru.mephi.agt.util.ErrorCode;

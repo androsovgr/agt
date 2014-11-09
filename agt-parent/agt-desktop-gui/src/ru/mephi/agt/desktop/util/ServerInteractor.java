@@ -10,13 +10,14 @@ import org.slf4j.LoggerFactory;
 
 import ru.mephi.agt.api.request.GuiRequest;
 import ru.mephi.agt.api.response.ContactListResponse;
-import ru.mephi.agt.api.response.LoginResponse;
 import ru.mephi.agt.api.response.MessageListResponse;
 import ru.mephi.agt.desktop.model.ContactModel;
+import ru.mephi.agt.desktop.model.UserModel;
 import ru.mephi.agt.model.Contact;
 import ru.mephi.agt.model.Message;
 import ru.mephi.agt.model.User;
 import ru.mephi.agt.request.BaseResponse;
+import ru.mephi.agt.response.LoginResponse;
 import ru.mephi.agt.response.UserListResponse;
 
 public class ServerInteractor {
@@ -70,7 +71,7 @@ public class ServerInteractor {
 			messages.add(message);
 		}
 		MessageListResponse response = new MessageListResponse(messages);
-		LOGGER.info("Total got messages: {}", messages.size());
+		LOGGER.debug("Total got messages: {}", messages.size());
 
 		return response;
 	}
@@ -89,5 +90,9 @@ public class ServerInteractor {
 		LOGGER.info("Total got users: {}", users.size());
 
 		return response;
+	}
+
+	public static BaseResponse addUser(String displayName, UserModel userModel) {
+		return new BaseResponse();
 	}
 }

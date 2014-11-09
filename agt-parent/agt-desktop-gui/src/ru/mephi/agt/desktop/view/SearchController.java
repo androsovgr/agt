@@ -1,7 +1,8 @@
 package ru.mephi.agt.desktop.view;
 
-import java.awt.TextField;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -9,13 +10,23 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import org.controlsfx.control.Notifications;
+import org.controlsfx.dialog.Dialogs;
+
 import ru.mephi.agt.api.request.GuiRequest;
+import ru.mephi.agt.desktop.MainApp;
 import ru.mephi.agt.desktop.component.GenderTableCell;
+import ru.mephi.agt.desktop.converter.UserConverter;
 import ru.mephi.agt.desktop.model.UserModel;
 import ru.mephi.agt.desktop.model.converter.GenderConverter;
 import ru.mephi.agt.desktop.util.ControllerUtil;
 import ru.mephi.agt.desktop.util.ServerInteractor;
 import ru.mephi.agt.model.Gender;
+import ru.mephi.agt.model.User;
+import ru.mephi.agt.request.BaseResponse;
 import ru.mephi.agt.response.UserListResponse;
 
 public class SearchController {
@@ -55,6 +66,12 @@ public class SearchController {
 	private TableColumn<UserModel, String> countryColumn;
 	@FXML
 	private TableColumn<UserModel, Gender> genderColumn;
+	private MainApp mainApp;
+	private Stage stage;
+
+	public void setStage(Stage stage) {
+		this.stage = stage;
+	}
 
 	@FXML
 	private void initialize() {
@@ -74,6 +91,7 @@ public class SearchController {
 		cityField.setText("");
 		countryField.setText("");
 		genderField.setValue(null);
+		searchTable.setItems(FXCollections.emptyObservableList());
 	}
 
 	@FXML
@@ -81,9 +99,10 @@ public class SearchController {
 		UserListResponse response = ServerInteractor
 				.searchUsers(new GuiRequest());
 		if (ControllerUtil.handleResponse(response)) {
-			response.getUsers();
-			// searchTable.setItems(FXCollections.observableArrayList(response
-			// .getUsers()));
+			List<User> users = response.getUsers();
+			List<UserModel> userModels = UserConverter
+					.convertToGuiModelList(users);
+			searchTable.setItems(FXCollections.observableArrayList(userModels));
 		} else {
 			// TODO
 		}
@@ -91,12 +110,35 @@ public class SearchController {
 
 	@FXML
 	private void startChat() {
-
+		UserModel selected = searchTable.getSelectionModel().getSelectedItem();
+		if (selected != null) {
+			mainApp.startChatWith(selected);
+		}
 	}
 
 	@FXML
 	private void addToContactList() {
+		UserModel selected = searchTable.getSelectionModel().getSelectedItem();
+		if (selected != null) {
+			Optional<String> dialogResponse = Dialogs.create().owner(stage)
+					.title("Добавление нового контакта")
+					.message("Введите желаемое имя контакта:")
+					.showTextInput(selected.getNick());
+			if (dialogResponse.isPresent()) {
+				String displayName = dialogResponse.get();
+				BaseResponse response = ServerInteractor.addUser(displayName,
+						selected);
+				if (ControllerUtil.handleResponse(response)) {
+					Notifications
+							.create()
+							.title("Добавление пользователя")
+							.text("Пользователь " + displayName
+									+ " успешно добавлен в контакт-лист")
+							.showWarning();
+				}
+			}
 
+		}
 	}
 
 	private void initColumns() {
@@ -117,5 +159,9 @@ public class SearchController {
 		genderColumn.setCellValueFactory(cellData -> cellData.getValue()
 				.genderProperty());
 		genderColumn.setCellFactory(column -> new GenderTableCell());
+	}
+
+	public void setMainApp(MainApp mainApp) {
+		this.mainApp = mainApp;
 	}
 }
