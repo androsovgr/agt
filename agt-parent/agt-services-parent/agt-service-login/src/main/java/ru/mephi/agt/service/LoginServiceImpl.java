@@ -35,7 +35,7 @@ public class LoginServiceImpl implements LoginServiceInterface {
 	public LoginResponse tryLogin(LoginRequest request) {
 		String methodName = "tryLogin";
 		LogUtil.logStarted(LOGGER, methodName, request);
-		LoginResponse response = new LoginResponse();
+		LoginResponse response = new LoginResponse(false);
 
 		try {
 			IdRequest idRequest = new IdRequest(request.getTransactionId(),
@@ -43,12 +43,13 @@ public class LoginServiceImpl implements LoginServiceInterface {
 			UserResponse userResponse = userServiceInterface
 					.getUserById(idRequest);
 			if (userResponse.getErrorCode() == ErrorCode.OK) {
-				String passwordHashed = userResponse.getUser().getPassword();
-				String passwordHashed2 = getHash(request.getPassword());
-				if (passwordHashed.equals(passwordHashed2)) {
-					response.setSuccess(true);
-				} else {
-					response.setSuccess(false);
+				if (userResponse.getUser() != null) {
+					String passwordHashed = userResponse.getUser()
+							.getPassword();
+					String passwordHashed2 = getHash(request.getPassword());
+					if (passwordHashed.equals(passwordHashed2)) {
+						response.setSuccess(true);
+					}
 				}
 			} else {
 				response.setErrorCode(ErrorCode.INTERNAL_ERROR);

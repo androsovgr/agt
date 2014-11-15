@@ -24,12 +24,6 @@ public class ServerConnector {
 
 	private static final String API_CONTEXT_PROPERTY = "api-context";
 
-	public static void main(String[] args) {
-		getApiInterface();
-		System.out.println(apiInterface);
-		client.close();
-	}
-
 	public static ApiInterface getApiInterface() {
 		if (apiInterface == null) {
 			synchronized ("") {
@@ -42,12 +36,23 @@ public class ServerConnector {
 	}
 
 	private static void initApuInterface() {
-		client = new ResteasyClientBuilder().build();
+		client = getClient();
 		String context = getContext();
 		if (context != null) {
 			ResteasyWebTarget target = client.target(context);
 			apiInterface = target.proxy(ApiInterface.class);
 		}
+	}
+
+	private static ResteasyClient getClient() {
+		if (client == null) {
+			synchronized ("") {
+				if (client == null) {
+					client = new ResteasyClientBuilder().build();
+				}
+			}
+		}
+		return client;
 	}
 
 	private static String getContext() {

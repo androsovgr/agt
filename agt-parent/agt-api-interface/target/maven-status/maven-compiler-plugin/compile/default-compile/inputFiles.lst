@@ -1,7 +1,7 @@
-C:\Users\Григорий\git\AGT\agt-parent\agt-api-interface\src\main\java\ru\mephi\agt\api\response\ContactListResponse.java
-C:\Users\Григорий\git\AGT\agt-parent\agt-api-interface\src\main\java\ru\mephi\agt\api\response\SearchResponse.java
-C:\Users\Григорий\git\AGT\agt-parent\agt-api-interface\src\main\java\ru\mephi\agt\api\response\MessageListResponse.java
-C:\Users\Григорий\git\AGT\agt-parent\agt-api-interface\src\main\java\ru\mephi\agt\api\ApiInterface.java
-C:\Users\Григорий\git\AGT\agt-parent\agt-api-interface\src\main\java\ru\mephi\agt\api\request\GuiRequest.java
-C:\Users\Григорий\git\AGT\agt-parent\agt-api-interface\src\main\java\ru\mephi\agt\api\request\AddContactRequest.java
-C:\Users\Григорий\git\AGT\agt-parent\agt-api-interface\src\main\java\ru\mephi\agt\api\RegistrationService.java
+C:\dev\study\git\agt\agt-parent\agt-api-interface\src\main\java\ru\mephi\agt\api\ApiInterface.java
+C:\dev\study\git\agt\agt-parent\agt-api-interface\src\main\java\ru\mephi\agt\api\response\ContactListResponse.java
+C:\dev\study\git\agt\agt-parent\agt-api-interface\src\main\java\ru\mephi\agt\api\request\AddContactRequest.java
+C:\dev\study\git\agt\agt-parent\agt-api-interface\src\main\java\ru\mephi\agt\api\RegistrationService.java
+C:\dev\study\git\agt\agt-parent\agt-api-interface\src\main\java\ru\mephi\agt\api\request\GuiRequest.java
+C:\dev\study\git\agt\agt-parent\agt-api-interface\src\main\java\ru\mephi\agt\api\response\SearchResponse.java
+C:\dev\study\git\agt\agt-parent\agt-api-interface\src\main\java\ru\mephi\agt\api\response\MessageListResponse.java

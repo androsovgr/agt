@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ru.mephi.agt.api.ApiInterface;
 import ru.mephi.agt.api.request.GuiRequest;
 import ru.mephi.agt.api.response.ContactListResponse;
 import ru.mephi.agt.api.response.MessageListResponse;
@@ -17,8 +18,12 @@ import ru.mephi.agt.model.Contact;
 import ru.mephi.agt.model.Message;
 import ru.mephi.agt.model.User;
 import ru.mephi.agt.request.BaseResponse;
+import ru.mephi.agt.request.LoginRequest;
+import ru.mephi.agt.request.StringRequest;
+import ru.mephi.agt.response.IdResponse;
 import ru.mephi.agt.response.LoginResponse;
 import ru.mephi.agt.response.UserListResponse;
+import ru.mephi.agt.util.LogUtil;
 
 public class ServerInteractor {
 
@@ -30,15 +35,39 @@ public class ServerInteractor {
 	}
 
 	public static LoginResponse login(String login, String password) {
-		LOGGER.info("Try login with login: {} and password: {} ", login,
-				password);
-		// TODO: implement
-		return null;
+		final String methodName = "register";
+		LoginRequest request = null;
+		LoginResponse response = null;
+		try {
+			long id = Long.parseLong(login);
+			request = new LoginRequest(id, password);
+			LogUtil.logStarted(LOGGER, methodName, request);
+			ApiInterface api = ServerConnector.getApiInterface();
+			if (api != null) {
+				response = api.login(request);
+			}
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+		return response;
 	}
 
-	public static void register(String password) {
-		LOGGER.info("Try register with password: {} ", password);
-		// TODO: implement
+	public static IdResponse register(String password) {
+		final String methodName = "register";
+		StringRequest request = new StringRequest(password);
+		IdResponse response = null;
+		try {
+			LogUtil.logStarted(LOGGER, methodName, request);
+			ApiInterface api = ServerConnector.getApiInterface();
+			if (api != null) {
+				response = api.register(request);
+			}
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+		return response;
 	}
 
 	public static ContactListResponse getContacts() {

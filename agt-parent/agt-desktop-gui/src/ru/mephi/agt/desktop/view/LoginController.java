@@ -11,7 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ru.mephi.agt.desktop.MainApp;
+import ru.mephi.agt.desktop.util.ControllerUtil;
 import ru.mephi.agt.desktop.util.ServerInteractor;
+import ru.mephi.agt.response.IdResponse;
+import ru.mephi.agt.response.LoginResponse;
 
 public class LoginController {
 
@@ -66,9 +69,12 @@ public class LoginController {
 		} else if (password == null || password.isEmpty()) {
 			LOGGER.info("Incorrect password: {}", password);
 		} else {
-			ServerInteractor.login(login, password);
-			// TODO: if logined
-			mainApp.initContacts();
+			LoginResponse response = ServerInteractor.login(login, password);
+			if (ControllerUtil.handleResponse(response)) {
+				if (response.isSuccess()) {
+					mainApp.initContacts();
+				}
+			}
 		}
 	}
 
@@ -92,7 +98,11 @@ public class LoginController {
 		if (passwordFirst != null && passwordSecond != null
 				&& passwordFirst.equals(passwordSecond)
 				&& !passwordFirst.isEmpty()) {
-			ServerInteractor.register(passwordFirst);
+			IdResponse response = ServerInteractor.register(passwordFirst);
+			if (ControllerUtil.handleResponse(response)) {
+				idField.setText(response.getId() + "");
+				passwordField.setText(registerPasswordField.getText());
+			}
 		}
 	}
 
