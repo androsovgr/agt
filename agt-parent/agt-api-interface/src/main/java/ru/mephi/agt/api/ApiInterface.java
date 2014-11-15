@@ -7,6 +7,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import ru.mephi.agt.request.LoginRequest;
+import ru.mephi.agt.request.StringRequest;
+import ru.mephi.agt.response.IdResponse;
 import ru.mephi.agt.response.LoginResponse;
 
 @Path("/")
@@ -17,5 +19,8 @@ public interface ApiInterface {
 	@Path("/login")
 	@POST
 	public LoginResponse login(LoginRequest request);
-	// TODO: fill
+
+	@Path("/register")
+	@POST
+	public IdResponse register(StringRequest request);
 }

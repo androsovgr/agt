@@ -1,6 +1,6 @@
 package ru.mephi.agt.util;
 
 public enum ErrorCode {
-	OK
+	OK, INTERNAL_ERROR
 	// TODO: fill it
 }

@@ -10,7 +10,6 @@
 	<artifactId>agt-desktop-gui</artifactId>
 
 	<properties>
-		<slf4jVersion>1.6.1</slf4jVersion>
 		<jidefxVersion>0.9.1-b128</jidefxVersion>
 	</properties>
 
@@ -31,17 +30,18 @@
 			<version>${jidefxVersion}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4jVersion}</version>
-		</dependency>
-
 		<!-- Binding for System.out -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>${slf4jVersion}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-client</artifactId>
+			<version>${resteasy.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- OWN -->

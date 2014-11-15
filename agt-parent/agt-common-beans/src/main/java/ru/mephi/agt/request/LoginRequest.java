@@ -1,42 +1,51 @@
 package ru.mephi.agt.request;
 
-import ru.mephi.agt.model.User;
-import ru.mephi.agt.request.BaseRequest;
 
 public class LoginRequest extends BaseRequest {
 
-	private User user;
+	private long id;
+	private String password;
+
+	public LoginRequest(long id, String password) {
+		super();
+		this.id = id;
+		this.password = password;
+	}
 
 	public LoginRequest() {
 		super();
-	}
-
-	@Override
-	public String toString() {
-		return "LoginRequest [user=" + user + ", transactionId="
-				+ transactionId + "]";
-	}
-
-	public LoginRequest(User user) {
-		super();
-		this.user = user;
 	}
 
 	public LoginRequest(String transactionId) {
 		super(transactionId);
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public LoginRequest(String transactionId, User user) {
+	public LoginRequest(String transactionId, long id, String password) {
 		super(transactionId);
-		this.user = user;
+		this.id = id;
+		this.password = password;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	@Override
+	public String toString() {
+		return "LoginRequest [id=" + id + ", password=" + password
+				+ ", transactionId=" + transactionId + "]";
 	}
 
 }
