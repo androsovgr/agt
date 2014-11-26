@@ -2,19 +2,45 @@ package ru.mephi.agt.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "user")
 public class User {
 
+	@Id
+	@Column(name = "user_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long userId;
+	@Column(name = "nickname")
 	private String nickName;
+	@Column(name = "first_name")
 	private String firstName;
+	@Column(name = "last_name")
 	private String lastName;
+	@Column(name = "password")
 	private String password;
+	@Column(name = "birth_date")
 	private Date birthDate;
+	@Column(name = "city")
 	private String city;
+	@Column(name = "country")
 	private String country;
+	@Column(name = "phone")
 	private String phone;
-	private Gender gender;
-	private Role role;
+	@Enumerated(EnumType.ORDINAL)
+	@Column(name = "gender_id")
+	private Gender gender = Gender.EMPTY;
+	@Enumerated(EnumType.ORDINAL)
+	@Column(name = "role_id")
+	private Role role = Role.USER;
 
 	public User() {
 		super();
