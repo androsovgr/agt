@@ -11,6 +11,7 @@
 	<modules>
 		<module>agt-service-login</module>
 		<module>agt-service-db</module>
+		<module>agt-service-hazelcast</module>
 	</modules>
 	<dependencies>
 		<dependency>
@@ -23,6 +24,16 @@
 			<groupId>javax.ejb</groupId>
 			<artifactId>javax.ejb-api</artifactId>
 			<version>3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<version>1.2</version>
 		</dependency>
 	</dependencies>
 

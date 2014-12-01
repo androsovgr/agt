@@ -1,4 +1,4 @@
-package ru.mephi.agt.request;
+package ru.mephi.agt.response;
 
 import ru.mephi.agt.util.ErrorCode;
 
@@ -30,6 +30,14 @@ public class BaseResponse {
 
 	public void setErrorCode(ErrorCode errorCode) {
 		this.errorCode = errorCode;
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 
 }

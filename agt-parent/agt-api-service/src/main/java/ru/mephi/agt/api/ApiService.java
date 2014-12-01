@@ -5,11 +5,15 @@ import javax.ejb.EJB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ru.mephi.agt.request.BaseRequest;
 import ru.mephi.agt.request.LoginRequest;
 import ru.mephi.agt.request.StringRequest;
+import ru.mephi.agt.request.gui.GuiRequest;
+import ru.mephi.agt.response.BaseResponse;
 import ru.mephi.agt.response.IdResponse;
 import ru.mephi.agt.response.LoginResponse;
-import ru.mephi.agt.service.LoginServiceInterface;
+import ru.mephi.agt.service.HazelcastService;
+import ru.mephi.agt.service.LoginService;
 import ru.mephi.agt.util.LogUtil;
 
 public class ApiService implements ApiInterface {
@@ -18,7 +22,10 @@ public class ApiService implements ApiInterface {
 			.getLogger(ApiService.class);
 
 	@EJB
-	private LoginServiceInterface loginService;
+	private LoginService loginService;
+
+	@EJB
+	private HazelcastService hazelcastService;
 
 	public ApiService() {
 	}
@@ -36,6 +43,16 @@ public class ApiService implements ApiInterface {
 		response = loginService.register(request);
 		LogUtil.logFinished(LOGGER, methodName, request, response);
 		return response;
+	}
+
+	@Override
+	public BaseResponse test(BaseRequest request) {
+		return hazelcastService.setLogined(new GuiRequest(1, "uid"));
+	}
+
+	@Override
+	public BaseResponse test2(BaseRequest request) {
+		return hazelcastService.checkLogined(new GuiRequest(1, "uid"));
 	}
 
 }

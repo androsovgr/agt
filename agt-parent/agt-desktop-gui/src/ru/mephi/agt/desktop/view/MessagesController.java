@@ -15,7 +15,7 @@ import ru.mephi.agt.desktop.constants.StyleClassContstant;
 import ru.mephi.agt.desktop.model.ContactModel;
 import ru.mephi.agt.desktop.util.ControllerUtil;
 import ru.mephi.agt.desktop.util.ServerInteractor;
-import ru.mephi.agt.request.BaseResponse;
+import ru.mephi.agt.response.BaseResponse;
 
 public class MessagesController {
 

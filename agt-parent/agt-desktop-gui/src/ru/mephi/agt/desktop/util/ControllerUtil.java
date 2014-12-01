@@ -1,6 +1,6 @@
 package ru.mephi.agt.desktop.util;
 
-import ru.mephi.agt.request.BaseResponse;
+import ru.mephi.agt.response.BaseResponse;
 import ru.mephi.agt.util.ErrorCode;
 
 public class ControllerUtil {

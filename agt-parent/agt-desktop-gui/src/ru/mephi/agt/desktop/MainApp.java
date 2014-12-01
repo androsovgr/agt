@@ -19,7 +19,6 @@ import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ru.mephi.agt.api.request.GuiRequest;
 import ru.mephi.agt.api.response.ContactListResponse;
 import ru.mephi.agt.api.response.MessageListResponse;
 import ru.mephi.agt.desktop.constants.ViewPathConstant;
@@ -35,6 +34,7 @@ import ru.mephi.agt.desktop.view.SearchController;
 import ru.mephi.agt.model.Contact;
 import ru.mephi.agt.model.Message;
 import ru.mephi.agt.model.Status;
+import ru.mephi.agt.request.gui.GuiRequest;
 
 public class MainApp extends Application {
 

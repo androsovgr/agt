@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.dialog.Dialogs;
 
-import ru.mephi.agt.api.request.GuiRequest;
 import ru.mephi.agt.desktop.MainApp;
 import ru.mephi.agt.desktop.component.GenderTableCell;
 import ru.mephi.agt.desktop.converter.UserConverter;
@@ -26,7 +25,8 @@ import ru.mephi.agt.desktop.util.ControllerUtil;
 import ru.mephi.agt.desktop.util.ServerInteractor;
 import ru.mephi.agt.model.Gender;
 import ru.mephi.agt.model.User;
-import ru.mephi.agt.request.BaseResponse;
+import ru.mephi.agt.request.gui.GuiRequest;
+import ru.mephi.agt.response.BaseResponse;
 import ru.mephi.agt.response.UserListResponse;
 
 public class SearchController {

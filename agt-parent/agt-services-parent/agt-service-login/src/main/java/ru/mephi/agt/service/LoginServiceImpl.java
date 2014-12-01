@@ -22,20 +22,20 @@ import ru.mephi.agt.util.ErrorCode;
 import ru.mephi.agt.util.LogUtil;
 
 @Stateful
-@Local(LoginServiceInterface.class)
-public class LoginServiceImpl implements LoginServiceInterface {
+@Local(LoginService.class)
+public class LoginServiceImpl implements LoginService {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(LoginServiceImpl.class);
 
 	@EJB
-	private UserServiceInterface userServiceInterface;
+	private UserService userServiceInterface;
 
 	@Override
 	public LoginResponse tryLogin(LoginRequest request) {
 		String methodName = "tryLogin";
 		LogUtil.logStarted(LOGGER, methodName, request);
-		LoginResponse response = new LoginResponse(false);
+		LoginResponse response = new LoginResponse(ErrorCode.UNAUTHORIZED, null);
 
 		try {
 			IdRequest idRequest = new IdRequest(request.getTransactionId(),
@@ -48,7 +48,7 @@ public class LoginServiceImpl implements LoginServiceInterface {
 							.getPassword();
 					String passwordHashed2 = getHash(request.getPassword());
 					if (passwordHashed.equals(passwordHashed2)) {
-						response.setSuccess(true);
+						response.setErrorCode(ErrorCode.OK);
 					}
 				}
 			} else {

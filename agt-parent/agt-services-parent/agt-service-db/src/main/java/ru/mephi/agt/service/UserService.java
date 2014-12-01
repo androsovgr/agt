@@ -5,7 +5,7 @@ import ru.mephi.agt.request.UserRequest;
 import ru.mephi.agt.response.IdResponse;
 import ru.mephi.agt.response.UserResponse;
 
-public interface UserServiceInterface {
+public interface UserService {
 
 	public UserResponse getUserById(IdRequest request);
 

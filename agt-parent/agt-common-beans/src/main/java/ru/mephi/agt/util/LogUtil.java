@@ -3,7 +3,7 @@ package ru.mephi.agt.util;
 import org.slf4j.Logger;
 
 import ru.mephi.agt.request.BaseRequest;
-import ru.mephi.agt.request.BaseResponse;
+import ru.mephi.agt.response.BaseResponse;
 
 public class LogUtil {
 

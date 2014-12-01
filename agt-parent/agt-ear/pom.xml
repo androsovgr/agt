@@ -30,6 +30,12 @@
 		</dependency>
 		<dependency>
 			<groupId>ru.mephi.agt</groupId>
+			<artifactId>agt-service-hazelcast</artifactId>
+			<version>${project.version}</version>
+			<type>ejb</type>
+		</dependency>
+		<dependency>
+			<groupId>ru.mephi.agt</groupId>
 			<artifactId>agt-common-beans</artifactId>
 			<version>${project.version}</version>
 			<type>jar</type>

@@ -20,15 +20,5 @@
 			<version>4.2.0.Final</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>javax.inject</groupId>
-			<artifactId>javax.inject</artifactId>
-			<version>1</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.enterprise</groupId>
-			<artifactId>cdi-api</artifactId>
-			<version>1.2</version>
-		</dependency>
 	</dependencies>
 </project>

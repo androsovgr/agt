@@ -17,8 +17,8 @@ import ru.mephi.agt.util.ErrorCode;
 import ru.mephi.agt.util.LogUtil;
 
 @Stateless
-@Local(UserServiceInterface.class)
-public class UserServiceImpl implements UserServiceInterface {
+@Local(UserService.class)
+public class UserServiceImpl implements UserService {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(UserServiceImpl.class);

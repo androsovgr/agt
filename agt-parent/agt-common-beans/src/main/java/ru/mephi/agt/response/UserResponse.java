@@ -1,7 +1,6 @@
 package ru.mephi.agt.response;
 
 import ru.mephi.agt.model.User;
-import ru.mephi.agt.request.BaseResponse;
 import ru.mephi.agt.util.ErrorCode;
 
 public class UserResponse extends BaseResponse {

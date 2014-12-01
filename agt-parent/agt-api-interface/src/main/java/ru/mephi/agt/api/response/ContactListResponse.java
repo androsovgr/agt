@@ -3,7 +3,7 @@ package ru.mephi.agt.api.response;
 import java.util.List;
 
 import ru.mephi.agt.model.Contact;
-import ru.mephi.agt.request.BaseResponse;
+import ru.mephi.agt.response.BaseResponse;
 import ru.mephi.agt.util.ErrorCode;
 
 public class ContactListResponse extends BaseResponse {

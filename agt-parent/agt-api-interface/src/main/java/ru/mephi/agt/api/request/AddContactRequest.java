@@ -1,5 +1,7 @@
 package ru.mephi.agt.api.request;
 
+import ru.mephi.agt.request.gui.GuiRequest;
+
 public class AddContactRequest extends GuiRequest {
 
 	private long userId;
