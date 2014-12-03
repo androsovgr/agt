@@ -3,7 +3,9 @@ package ru.mephi.agt.desktop;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -19,7 +21,6 @@ import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ru.mephi.agt.api.response.ContactListResponse;
 import ru.mephi.agt.api.response.MessageListResponse;
 import ru.mephi.agt.desktop.constants.ViewPathConstant;
 import ru.mephi.agt.desktop.converter.ContactConverter;
@@ -35,6 +36,8 @@ import ru.mephi.agt.model.Contact;
 import ru.mephi.agt.model.Message;
 import ru.mephi.agt.model.Status;
 import ru.mephi.agt.request.gui.GuiRequest;
+import ru.mephi.agt.response.ContactListResponse;
+import ru.mephi.agt.response.IdListResponse;
 
 public class MainApp extends Application {
 
@@ -44,7 +47,10 @@ public class MainApp extends Application {
 	private Stage searchStage;
 	private ChatListController chatListController;
 	private ContactsController contactsController;
+	private String uid;
+	private long ownId;
 	private HashMap<Long, ContactModel> contactMap = new HashMap<Long, ContactModel>();
+	private List<Contact> contacts;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -107,7 +113,7 @@ public class MainApp extends Application {
 			stage.setScene(scene);
 			stage.sizeToScene();
 			stage.show();
-			updateAll();
+			updateContactMapPutIntoContacts();
 			initCheckMessagesThread();
 		} catch (IOException e) {
 			LOGGER.error("Can't find {}", ViewPathConstant.LOGIN_VIEW_PATH, e);
@@ -179,9 +185,8 @@ public class MainApp extends Application {
 	public void updateAll() {
 		try {
 			List<Message> messages = getMessages();
-			List<ContactModel> delta2 = updateContactMap();
+			updateContactStatuses();
 			List<ContactModel> delta = addReceivedMessagesForContactMap(messages);
-			delta.addAll(delta2);
 			contactsController.updateContactList(delta);
 			updateChats(messages);
 		} catch (Exception e) {
@@ -221,49 +226,53 @@ public class MainApp extends Application {
 		}
 	}
 
-	private List<ContactModel> updateContactMap() {
+	public void updateContactMapPutIntoContacts() {
 		List<ContactModel> delta = new ArrayList<ContactModel>();
-
-		ContactListResponse response = ServerInteractor.getContacts();
-		if (response != null) {
-			// ONLINE
-			List<Contact> onlineContacts = response.getOnlineContacts();
-			List<ContactModel> onlineContactModels = ContactConverter
-					.toGuiModelList(onlineContacts);
-			for (ContactModel contactModel : onlineContactModels) {
-				contactModel.setStatus(Status.ONLINE);
-			}
-
-			// OFFLINE
-			List<Contact> offlineContacts = response.getOfflineContacts();
-			List<ContactModel> offlineContactModels = ContactConverter
-					.toGuiModelList(offlineContacts);
-			for (ContactModel contactModel : offlineContactModels) {
-				contactModel.setStatus(Status.OFFLINE);
-			}
-
-			// COMPOSE
-			for (ContactModel contactModel : onlineContactModels) {
-				if (!contactMap.containsKey(contactModel.getId())) {
-					contactMap.put(contactModel.getId(), contactModel);
-					delta.add(contactModel);
-				} else {
-					contactMap.get(contactModel.getId()).setStatus(
-							contactModel.getStatus());
-				}
-			}
-			for (ContactModel contactModel : offlineContactModels) {
-				if (!contactMap.containsKey(contactModel.getId())) {
-					contactMap.put(contactModel.getId(), contactModel);
-					delta.add(contactModel);
-				} else {
-					contactMap.get(contactModel.getId()).setStatus(
-							contactModel.getStatus());
+		ContactListResponse response = ServerInteractor.getContacts(ownId, uid);
+		if (ControllerUtil.handleResponse(response)) {
+			contacts = response.getContacts();
+			List<Contact> contacts = response.getContacts();
+			for (Contact contact : contacts) {
+				if (!contactMap.containsKey(contact.getUser().getUserId())) {
+					ContactModel guiContact = ContactConverter
+							.toGuiModel(contact);
+					guiContact.setStatus(Status.OFFLINE);
+					delta.add(guiContact);
+					contactMap.put(guiContact.getId(), guiContact);
 				}
 			}
 		}
+		contactsController.updateContactList(delta);
+	}
 
-		return delta;
+	private void updateContactStatuses() {
+		IdListResponse response = ServerInteractor.getOnlineOf(contacts, uid,
+				ownId);
+		ServerInteractor.getOnlineOf(contacts, uid, ownId);
+		if (response != null) {
+			Set<Long> onlineSet = new HashSet<Long>();
+			onlineSet.addAll(response.getIdList());
+			List<Long> onlineContactIds = response.getIdList();
+			List<Long> offlineContactIds = new ArrayList<Long>();
+			for (Contact contact : contacts) {
+				if (!onlineSet.contains(contact.getUser().getUserId())) {
+					offlineContactIds.add(contact.getUser().getUserId());
+				}
+			}
+			// UPDATE
+			for (Long contactId : onlineContactIds) {
+				ContactModel contact = contactMap.get(contactId);
+				if (Status.ONLINE != contact.getStatus()) {
+					contact.setStatus(Status.ONLINE);
+				}
+			}
+			for (Long contactId : offlineContactIds) {
+				ContactModel contact = contactMap.get(contactId);
+				if (Status.OFFLINE != contact.getStatus()) {
+					contact.setStatus(Status.OFFLINE);
+				}
+			}
+		}
 	}
 
 	private List<Message> getMessages() {
@@ -283,6 +292,22 @@ public class MainApp extends Application {
 
 	public Stage getStage() {
 		return stage;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public long getOwnId() {
+		return ownId;
+	}
+
+	public void setOwnId(long ownId) {
+		this.ownId = ownId;
 	}
 
 }

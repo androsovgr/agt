@@ -4,23 +4,20 @@ import ru.mephi.agt.util.ErrorCode;
 
 public class LoginResponse extends BaseResponse {
 
-	boolean success;
-
-	public LoginResponse(ErrorCode errorCode, String errorMessage,
-			boolean success) {
-		super(errorCode, errorMessage);
-		this.success = success;
-	}
+	protected String uid;
 
 	@Override
 	public String toString() {
-		return "LoginResponse [success=" + success + ", errorCode=" + errorCode
+		return "LoginResponse [uid=" + uid + ", errorCode=" + errorCode
 				+ ", errorMessage=" + errorMessage + "]";
 	}
 
-	public LoginResponse(boolean success) {
-		super();
-		this.success = success;
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
 	public LoginResponse() {
@@ -31,12 +28,9 @@ public class LoginResponse extends BaseResponse {
 		super(errorCode, errorMessage);
 	}
 
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
+	public LoginResponse(String uid) {
+		super();
+		this.uid = uid;
 	}
 
 }

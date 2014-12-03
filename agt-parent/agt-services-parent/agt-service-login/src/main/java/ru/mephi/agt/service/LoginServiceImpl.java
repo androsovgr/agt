@@ -2,6 +2,7 @@ package ru.mephi.agt.service;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -15,6 +16,8 @@ import ru.mephi.agt.request.IdRequest;
 import ru.mephi.agt.request.LoginRequest;
 import ru.mephi.agt.request.StringRequest;
 import ru.mephi.agt.request.UserRequest;
+import ru.mephi.agt.request.gui.GuiRequest;
+import ru.mephi.agt.response.BaseResponse;
 import ru.mephi.agt.response.IdResponse;
 import ru.mephi.agt.response.LoginResponse;
 import ru.mephi.agt.response.UserResponse;
@@ -30,6 +33,9 @@ public class LoginServiceImpl implements LoginService {
 
 	@EJB
 	private UserService userServiceInterface;
+
+	@EJB
+	private HazelcastService hazelcastService;
 
 	@Override
 	public LoginResponse tryLogin(LoginRequest request) {
@@ -48,11 +54,24 @@ public class LoginServiceImpl implements LoginService {
 							.getPassword();
 					String passwordHashed2 = getHash(request.getPassword());
 					if (passwordHashed.equals(passwordHashed2)) {
-						response.setErrorCode(ErrorCode.OK);
+						String uid = UUID.randomUUID().toString();
+						GuiRequest guiRequest = new GuiRequest(
+								request.getTransactionId(), request.getId(),
+								uid);
+						BaseResponse hzResponse = hazelcastService
+								.setLogined(guiRequest);
+						if (ErrorCode.OK == hzResponse.getErrorCode()) {
+							response = new LoginResponse(uid);
+						} else {
+							response = new LoginResponse(
+									hzResponse.getErrorCode(),
+									hzResponse.getErrorMessage());
+						}
 					}
 				}
 			} else {
-				response.setErrorCode(ErrorCode.INTERNAL_ERROR);
+				response = new LoginResponse(userResponse.getErrorCode(),
+						userResponse.getErrorMessage());
 			}
 		} catch (Exception e) {
 			LogUtil.logError(LOGGER, methodName, request, e);

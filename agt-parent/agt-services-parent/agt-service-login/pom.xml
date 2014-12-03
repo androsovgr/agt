@@ -13,5 +13,10 @@
 			<artifactId>agt-service-db</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>ru.mephi.agt</groupId>
+			<artifactId>agt-service-hazelcast</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 </project>

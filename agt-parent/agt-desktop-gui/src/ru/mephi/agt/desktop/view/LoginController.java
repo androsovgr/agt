@@ -62,18 +62,26 @@ public class LoginController {
 
 	@FXML
 	private void login() {
-		String login = idField.getText();
+		String loginText = idField.getText();
 		String password = passwordField.getText();
-		if (login == null || login.isEmpty() || !login.matches("\\d{1,15}")) {
-			LOGGER.info("Incorrect login: {}", login);
+		long login = 0;
+		if (loginText == null || loginText.isEmpty()
+				|| !loginText.matches("\\d{1,15}")) {
+			LOGGER.info("Incorrect login: {}", loginText);
 		} else if (password == null || password.isEmpty()) {
 			LOGGER.info("Incorrect password: {}", password);
 		} else {
-			LoginResponse response = ServerInteractor.login(login, password);
-			if (ControllerUtil.handleResponse(response)) {
-				if (response.isSuccess()) {
+			try {
+				login = Long.parseLong(loginText);
+				LoginResponse response = ServerInteractor
+						.login(login, password);
+				if (ControllerUtil.handleResponse(response)) {
+					mainApp.setUid(response.getUid());
+					mainApp.setOwnId(login);
 					mainApp.initContacts();
 				}
+			} catch (NumberFormatException e) {
+				LOGGER.warn("Can't parse login");
 			}
 		}
 	}

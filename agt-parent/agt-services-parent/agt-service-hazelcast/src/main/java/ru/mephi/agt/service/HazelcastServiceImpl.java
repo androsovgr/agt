@@ -1,5 +1,8 @@
 package ru.mephi.agt.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -8,9 +11,13 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ru.mephi.agt.model.Message;
+import ru.mephi.agt.request.IdListRequest;
+import ru.mephi.agt.request.IdRequest;
 import ru.mephi.agt.request.gui.GuiRequest;
 import ru.mephi.agt.request.gui.MessageGuiRequest;
 import ru.mephi.agt.response.BaseResponse;
+import ru.mephi.agt.response.IdListResponse;
 import ru.mephi.agt.response.MessageListResponse;
 import ru.mephi.agt.service.model.MessageList;
 import ru.mephi.agt.service.util.Constants;
@@ -18,6 +25,7 @@ import ru.mephi.agt.util.ErrorCode;
 import ru.mephi.agt.util.LogUtil;
 
 import com.hazelcast.core.IMap;
+import com.hazelcast.core.ISet;
 
 @Stateless
 @Local(HazelcastService.class)
@@ -34,20 +42,11 @@ public class HazelcastServiceImpl implements HazelcastService {
 	@Named(Constants.MESSAGES_MAP)
 	private IMap<Long, MessageList> messagesMap;
 
-	public HazelcastServiceImpl() {
-	}
+	@Inject
+	@Named(Constants.USER_SET)
+	private ISet<Long> userSet;
 
-	private BaseResponse checkLoginedPrivate(GuiRequest request) {
-		String uid = uidMap.get(request.getId());
-		BaseResponse response = null;
-		if (uid != null && uid.equals(request.getUid())) {
-			response = new BaseResponse();
-		} else {
-			response = new BaseResponse(ErrorCode.UNAUTHORIZED,
-					"Can't find user with id=" + request.getId()
-							+ " and same uid");
-		}
-		return response;
+	public HazelcastServiceImpl() {
 	}
 
 	@Override
@@ -57,11 +56,18 @@ public class HazelcastServiceImpl implements HazelcastService {
 
 		LogUtil.logStarted(LOGGER, methodName, request);
 		try {
-			response = checkLoginedPrivate(request);
+			String uid = uidMap.get(request.getOwnId());
+			if (uid != null && uid.equals(request.getUid())) {
+				response = new BaseResponse();
+			} else {
+				response = new BaseResponse(ErrorCode.UNAUTHORIZED,
+						"Can't find user with id=" + request.getOwnId()
+								+ " and same uid");
+			}
 		} catch (Exception e) {
 			LogUtil.logError(LOGGER, methodName, request, e);
 			response = new BaseResponse(ErrorCode.INTERNAL_ERROR,
-					"Can't put into uid map");
+					"Can't get from uid map");
 		}
 		LogUtil.logFinished(LOGGER, methodName, request, response);
 
@@ -75,7 +81,8 @@ public class HazelcastServiceImpl implements HazelcastService {
 
 		LogUtil.logStarted(LOGGER, methodName, request);
 		try {
-			uidMap.put(request.getId(), request.getUid());
+			uidMap.put(request.getOwnId(), request.getUid());
+			userSet.add(request.getOwnId());
 			response = new BaseResponse();
 		} catch (Exception e) {
 			LogUtil.logError(LOGGER, methodName, request, e);
@@ -94,21 +101,16 @@ public class HazelcastServiceImpl implements HazelcastService {
 
 		LogUtil.logStarted(LOGGER, methodName, request);
 		try {
-			BaseResponse loginedResponse = checkLoginedPrivate(request);
-			if (ErrorCode.OK == loginedResponse.getErrorCode()) {
-				MessageList messageList = messagesMap.get(request.getId());
-				if (messageList == null) {
-					messageList = new MessageList();
-				}
-				messageList.getMessages().add(request.getMessage());
-				messagesMap.put(request.getId(), messageList);
-			} else {
-				response = loginedResponse;
+			MessageList messageList = messagesMap.get(request.getOwnId());
+			if (messageList == null) {
+				messageList = new MessageList();
 			}
+			messageList.getMessages().add(request.getMessage());
+			messagesMap.put(request.getOwnId(), messageList);
 		} catch (Exception e) {
 			LogUtil.logError(LOGGER, methodName, request, e);
 			response = new BaseResponse(ErrorCode.INTERNAL_ERROR,
-					"Can't put into uid map");
+					"Can't put into message map");
 		}
 		LogUtil.logFinished(LOGGER, methodName, request, response);
 
@@ -122,28 +124,62 @@ public class HazelcastServiceImpl implements HazelcastService {
 
 		LogUtil.logStarted(LOGGER, methodName, request);
 		try {
-			BaseResponse loginedResponse = checkLoginedPrivate(request);
-			if (ErrorCode.OK == loginedResponse.getErrorCode()) {
-				MessageList messageList = messagesMap.get(request.getId());
-				if (messageList != null) {
-					response = new MessageListResponse(
-							messageList.getMessages());
-				} else {
-					response = new MessageListResponse();
-				}
+			MessageList messageList = messagesMap.get(request.getOwnId());
+			if (messageList != null) {
+				response = new MessageListResponse(messageList.getMessages());
 			} else {
-				response = new MessageListResponse(
-						loginedResponse.getErrorCode(),
-						loginedResponse.getErrorMessage());
+				response = new MessageListResponse(new ArrayList<Message>());
 			}
 		} catch (Exception e) {
 			LogUtil.logError(LOGGER, methodName, request, e);
 			response = new MessageListResponse(ErrorCode.INTERNAL_ERROR,
-					"Can't put into uid map");
+					"Can't receive messages");
 		}
 		LogUtil.logFinished(LOGGER, methodName, request, response);
 
 		return response;
 	}
 
+	@Override
+	public IdListResponse checkOnline(IdListRequest request) {
+		String methodName = "checkLogined";
+		IdListResponse response = null;
+
+		LogUtil.logStarted(LOGGER, methodName, request);
+		try {
+			List<Long> idList = new ArrayList<Long>();
+			for (Long id : request.getIdList()) {
+				if (userSet.contains(id)) {
+					idList.add(id);
+				}
+			}
+			response = new IdListResponse(idList);
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+			response = new IdListResponse(ErrorCode.INTERNAL_ERROR,
+					"Check logined");
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+
+		return response;
+	}
+
+	@Override
+	public BaseResponse removeLogined(IdRequest request) {
+		String methodName = "removeLogined";
+		BaseResponse response = null;
+
+		LogUtil.logStarted(LOGGER, methodName, request);
+		try {
+			userSet.remove(request.getId());
+			response = new BaseResponse();
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+			response = new IdListResponse(ErrorCode.INTERNAL_ERROR,
+					"Check logined");
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+
+		return response;
+	}
 }

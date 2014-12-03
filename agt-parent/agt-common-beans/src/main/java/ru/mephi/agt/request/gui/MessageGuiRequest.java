@@ -16,7 +16,7 @@ public class MessageGuiRequest extends GuiRequest {
 
 	@Override
 	public String toString() {
-		return "MessageGuiRequest [message=" + message + ", id=" + id
+		return "MessageGuiRequest [message=" + message + ", id=" + ownId
 				+ ", uid=" + uid + ", transactionId=" + transactionId + "]";
 	}
 

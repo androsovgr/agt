@@ -4,18 +4,18 @@ import ru.mephi.agt.request.BaseRequest;
 
 public class GuiRequest extends BaseRequest {
 
-	protected long id;
+	protected long ownId;
 	protected String uid;
 
 	public GuiRequest(String transactionId, long id, String uid) {
 		super(transactionId);
-		this.id = id;
+		this.ownId = id;
 		this.uid = uid;
 	}
 
 	public GuiRequest(long id, String uid) {
 		super();
-		this.id = id;
+		this.ownId = id;
 		this.uid = uid;
 	}
 
@@ -27,12 +27,12 @@ public class GuiRequest extends BaseRequest {
 		super(transactionId);
 	}
 
-	public long getId() {
-		return id;
+	public long getOwnId() {
+		return ownId;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setOwnId(long id) {
+		this.ownId = id;
 	}
 
 	public String getUid() {
@@ -45,7 +45,7 @@ public class GuiRequest extends BaseRequest {
 
 	@Override
 	public String toString() {
-		return "GuiRequest [id=" + id + ", uid=" + uid + ", transactionId="
+		return "GuiRequest [id=" + ownId + ", uid=" + uid + ", transactionId="
 				+ transactionId + "]";
 	}
 

@@ -1,24 +1,43 @@
 package ru.mephi.agt.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "contact")
 public class Contact {
 
+	@Id
+	@Column(name = "contact_id")
 	private long contactId;
+	@Column(name = "owner_user_id")
+	private long ownerUserId;
+	@Column(name = "display_name")
 	private String displayName;
+	@ManyToOne
+	@JoinColumn(name = "contact_user_id")
 	private User user;
 
 	@Override
 	public String toString() {
-		return "Contact [contactId=" + contactId + ", displayName="
-				+ displayName + ", user=" + user + "]";
+		return "Contact [contactId=" + contactId + ", ownerUserId="
+				+ ownerUserId + ", displayName=" + displayName + ", user="
+				+ user + "]";
 	}
 
 	public long getContactId() {
 		return contactId;
 	}
 
-	public Contact(long contactId, String displayName, User user) {
+	public Contact(long contactId, long ownerUserId, String displayName,
+			User user) {
 		super();
 		this.contactId = contactId;
+		this.ownerUserId = ownerUserId;
 		this.displayName = displayName;
 		this.user = user;
 	}
@@ -45,6 +64,14 @@ public class Contact {
 
 	public Contact() {
 		super();
+	}
+
+	public long getOwnerUserId() {
+		return ownerUserId;
+	}
+
+	public void setOwnerUserId(long ownerUserId) {
+		this.ownerUserId = ownerUserId;
 	}
 
 }

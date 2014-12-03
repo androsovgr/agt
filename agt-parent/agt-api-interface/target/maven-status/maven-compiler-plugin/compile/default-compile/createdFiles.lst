@@ -1,6 +1,8 @@
-ru\mephi\agt\api\ApiInterface.class
-ru\mephi\agt\api\request\AddContactRequest.class
+ru\mephi\agt\api\request\UserGuiRequest.class
+ru\mephi\agt\api\request\IdGuiRequest.class
+ru\mephi\agt\api\request\AddContactGuiRequest.class
+ru\mephi\agt\api\request\IdListGuiRequest.class
 ru\mephi\agt\api\RegistrationService.class
-ru\mephi\agt\api\response\ContactListResponse.class
 ru\mephi\agt\api\response\MessageListResponse.class
+ru\mephi\agt\api\ApiService.class
 ru\mephi\agt\api\response\SearchResponse.class

@@ -4,4 +4,5 @@ public class Constants {
 
 	public static final String UID_MAP = "uidMap";
 	public static final String MESSAGES_MAP = "messagesMap";
+	public static final String USER_SET = "userSet";
 }

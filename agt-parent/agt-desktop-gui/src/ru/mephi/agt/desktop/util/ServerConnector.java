@@ -12,19 +12,19 @@ import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ru.mephi.agt.api.ApiInterface;
+import ru.mephi.agt.api.ApiService;
 
 public class ServerConnector {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ServerConnector.class);
 
-	private static ApiInterface apiInterface;
+	private static ApiService apiInterface;
 	private static ResteasyClient client;
 
 	private static final String API_CONTEXT_PROPERTY = "api-context";
 
-	public static ApiInterface getApiInterface() {
+	public static ApiService getApiInterface() {
 		if (apiInterface == null) {
 			synchronized ("") {
 				if (apiInterface == null) {
@@ -40,7 +40,7 @@ public class ServerConnector {
 		String context = getContext();
 		if (context != null) {
 			ResteasyWebTarget target = client.target(context);
-			apiInterface = target.proxy(ApiInterface.class);
+			apiInterface = target.proxy(ApiService.class);
 		}
 	}
 

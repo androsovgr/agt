@@ -8,8 +8,10 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ru.mephi.agt.api.ApiInterface;
-import ru.mephi.agt.api.response.ContactListResponse;
+import ru.mephi.agt.api.ApiService;
+import ru.mephi.agt.api.request.AddContactGuiRequest;
+import ru.mephi.agt.api.request.IdListGuiRequest;
+import ru.mephi.agt.api.request.UserGuiRequest;
 import ru.mephi.agt.api.response.MessageListResponse;
 import ru.mephi.agt.desktop.model.ContactModel;
 import ru.mephi.agt.desktop.model.UserModel;
@@ -20,6 +22,8 @@ import ru.mephi.agt.request.LoginRequest;
 import ru.mephi.agt.request.StringRequest;
 import ru.mephi.agt.request.gui.GuiRequest;
 import ru.mephi.agt.response.BaseResponse;
+import ru.mephi.agt.response.ContactListResponse;
+import ru.mephi.agt.response.IdListResponse;
 import ru.mephi.agt.response.IdResponse;
 import ru.mephi.agt.response.LoginResponse;
 import ru.mephi.agt.response.UserListResponse;
@@ -34,15 +38,14 @@ public class ServerInteractor {
 		super();
 	}
 
-	public static LoginResponse login(String login, String password) {
+	public static LoginResponse login(long login, String password) {
 		final String methodName = "register";
 		LoginRequest request = null;
 		LoginResponse response = null;
 		try {
-			long id = Long.parseLong(login);
-			request = new LoginRequest(id, password);
+			request = new LoginRequest(login, password);
 			LogUtil.logStarted(LOGGER, methodName, request);
-			ApiInterface api = ServerConnector.getApiInterface();
+			ApiService api = ServerConnector.getApiInterface();
 			if (api != null) {
 				response = api.login(request);
 			}
@@ -59,7 +62,7 @@ public class ServerInteractor {
 		IdResponse response = null;
 		try {
 			LogUtil.logStarted(LOGGER, methodName, request);
-			ApiInterface api = ServerConnector.getApiInterface();
+			ApiService api = ServerConnector.getApiInterface();
 			if (api != null) {
 				response = api.register(request);
 			}
@@ -70,17 +73,21 @@ public class ServerInteractor {
 		return response;
 	}
 
-	public static ContactListResponse getContacts() {
+	public static ContactListResponse getContacts(long ownId, String uid) {
+		final String methodName = "register";
 		ContactListResponse response = null;
-
-		List<Contact> contactsOnline = new ArrayList<Contact>();
-		contactsOnline.add(new Contact(0, "Петя", null));
-		contactsOnline.add(new Contact(1, "Вася", null));
-		List<Contact> contactsOffline = new ArrayList<Contact>();
-		contactsOffline.add(new Contact(2, "Маша", null));
-
-		response = new ContactListResponse(contactsOnline, contactsOffline);
-
+		GuiRequest request = null;
+		try {
+			request = new GuiRequest(ownId, uid);
+			LogUtil.logStarted(LOGGER, methodName, request);
+			ApiService api = ServerConnector.getApiInterface();
+			if (api != null) {
+				response = api.getContactsFor(request);
+			}
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
 		return response;
 	}
 
@@ -91,7 +98,7 @@ public class ServerInteractor {
 
 	public static MessageListResponse getMessages(GuiRequest guiRequest) {
 		List<Message> messages = new ArrayList<Message>();
-		for (int i = 0; i < Math.round(Math.random() * 3); i++) {
+		for (int i = 0; i < /* Math.round(Math.random() * 3) */0; i++) {
 			Message message = new Message();
 			message.setMessageId(System.currentTimeMillis());
 			message.setMessage(UUID.randomUUID().toString());
@@ -105,23 +112,65 @@ public class ServerInteractor {
 		return response;
 	}
 
-	public static UserListResponse searchUsers(GuiRequest guiRequest) {
-		List<User> users = new ArrayList<User>();
-		User user = new User();
-		user.setUserId(1);
-		user.setNickName("Василий");
-		users.add(user);
-		user = new User();
-		user.setUserId(2);
-		user.setNickName(UUID.randomUUID().toString());
-		users.add(user);
-		UserListResponse response = new UserListResponse(users);
-		LOGGER.info("Total got users: {}", users.size());
-
+	public static UserListResponse searchUsers(User filters, String uid,
+			long ownId) {
+		final String methodName = "register";
+		UserListResponse response = null;
+		UserGuiRequest request = null;
+		try {
+			request = new UserGuiRequest(ownId, uid, filters);
+			LogUtil.logStarted(LOGGER, methodName, request);
+			ApiService api = ServerConnector.getApiInterface();
+			if (api != null) {
+				response = api.search(request);
+			}
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
 		return response;
 	}
 
-	public static BaseResponse addUser(String displayName, UserModel userModel) {
-		return new BaseResponse();
+	public static BaseResponse addUser(String displayName, UserModel userModel,
+			String uid, long ownId) {
+		final String methodName = "register";
+		BaseResponse response = null;
+		AddContactGuiRequest request = null;
+		try {
+			request = new AddContactGuiRequest(ownId, uid, userModel.getId(),
+					displayName);
+			LogUtil.logStarted(LOGGER, methodName, request);
+			ApiService api = ServerConnector.getApiInterface();
+			if (api != null) {
+				response = api.addContact(request);
+			}
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+		return response;
+	}
+
+	public static IdListResponse getOnlineOf(List<Contact> users, String uid,
+			long ownId) {
+		final String methodName = "getOnlineOf";
+		IdListResponse response = null;
+		IdListGuiRequest request = null;
+		try {
+			List<Long> userIds = new ArrayList<Long>();
+			for (Contact contact : users) {
+				userIds.add(contact.getUser().getUserId());
+			}
+			request = new IdListGuiRequest(ownId, uid, userIds);
+			LogUtil.logStarted(LOGGER, methodName, request);
+			ApiService api = ServerConnector.getApiInterface();
+			if (api != null) {
+				response = api.getStatuses(request);
+			}
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+		return response;
 	}
 }

@@ -2,7 +2,7 @@ package ru.mephi.agt.api.request;
 
 import ru.mephi.agt.request.gui.GuiRequest;
 
-public class AddContactRequest extends GuiRequest {
+public class AddContactGuiRequest extends GuiRequest {
 
 	private long userId;
 	private String displayName;
@@ -23,13 +23,13 @@ public class AddContactRequest extends GuiRequest {
 		this.displayName = displayName;
 	}
 
-	public AddContactRequest() {
+	public AddContactGuiRequest() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public AddContactRequest(long userId, String displayName) {
-		super();
+	public AddContactGuiRequest(long id, String uid, long userId,
+			String displayName) {
+		super(id, uid);
 		this.userId = userId;
 		this.displayName = displayName;
 	}

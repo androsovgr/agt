@@ -15,6 +15,8 @@ import javafx.stage.Stage;
 
 import org.controlsfx.control.Notifications;
 import org.controlsfx.dialog.Dialogs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ru.mephi.agt.desktop.MainApp;
 import ru.mephi.agt.desktop.component.GenderTableCell;
@@ -25,11 +27,13 @@ import ru.mephi.agt.desktop.util.ControllerUtil;
 import ru.mephi.agt.desktop.util.ServerInteractor;
 import ru.mephi.agt.model.Gender;
 import ru.mephi.agt.model.User;
-import ru.mephi.agt.request.gui.GuiRequest;
 import ru.mephi.agt.response.BaseResponse;
 import ru.mephi.agt.response.UserListResponse;
 
 public class SearchController {
+
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(SearchController.class);
 
 	@FXML
 	private TextField idField;
@@ -96,16 +100,26 @@ public class SearchController {
 
 	@FXML
 	private void search() {
-		UserListResponse response = ServerInteractor
-				.searchUsers(new GuiRequest());
+		UserListResponse response = ServerInteractor.searchUsers(collectUser(),
+				mainApp.getUid(), mainApp.getOwnId());
 		if (ControllerUtil.handleResponse(response)) {
 			List<User> users = response.getUsers();
 			List<UserModel> userModels = UserConverter
 					.convertToGuiModelList(users);
 			searchTable.setItems(FXCollections.observableArrayList(userModels));
-		} else {
-			// TODO
 		}
+	}
+
+	private User collectUser() {
+		User user = new User();
+
+		try {
+			user.setUserId(Long.parseLong((idField.getText())));
+		} catch (Exception e) {
+			LOGGER.warn("Invalid filters");
+		}
+
+		return user;
 	}
 
 	@FXML
@@ -127,14 +141,15 @@ public class SearchController {
 			if (dialogResponse.isPresent()) {
 				String displayName = dialogResponse.get();
 				BaseResponse response = ServerInteractor.addUser(displayName,
-						selected);
+						selected, mainApp.getUid(), mainApp.getOwnId());
 				if (ControllerUtil.handleResponse(response)) {
 					Notifications
 							.create()
 							.title("Добавление пользователя")
 							.text("Пользователь " + displayName
 									+ " успешно добавлен в контакт-лист")
-							.showWarning();
+							.showInformation();
+					mainApp.updateContactMapPutIntoContacts();
 				}
 			}
 
