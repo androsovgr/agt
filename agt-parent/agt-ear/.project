@@ -3,6 +3,7 @@
 	<name>agt-ear</name>
 	<comment></comment>
 	<projects>
+		<project>agt-service-orchestration</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

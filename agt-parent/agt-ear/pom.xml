@@ -34,9 +34,28 @@
 			<version>${project.version}</version>
 			<type>ejb</type>
 		</dependency>
+		<!-- LIBs -->
 		<dependency>
 			<groupId>ru.mephi.agt</groupId>
 			<artifactId>agt-common-beans</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>ru.mephi.agt</groupId>
+			<artifactId>agt-intarface-orchestration</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>ru.mephi.agt</groupId>
+			<artifactId>agt-interface-db</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>ru.mephi.agt</groupId>
+			<artifactId>agt-interface-hazelcast</artifactId>
 			<version>${project.version}</version>
 			<type>jar</type>
 		</dependency>

@@ -9,6 +9,7 @@ import javax.ws.rs.core.MediaType;
 
 import ru.mephi.agt.api.request.AddContactGuiRequest;
 import ru.mephi.agt.api.request.IdListGuiRequest;
+import ru.mephi.agt.api.request.SendMessageGuiRequest;
 import ru.mephi.agt.api.request.UserGuiRequest;
 import ru.mephi.agt.request.LoginRequest;
 import ru.mephi.agt.request.StringRequest;
@@ -48,6 +49,10 @@ public interface ApiService {
 	@Path("/getStatuses")
 	@POST
 	public IdListResponse getStatuses(IdListGuiRequest request);
+
+	@Path("/sendMesage")
+	@POST
+	public BaseResponse sendMessage(SendMessageGuiRequest request);
 
 	@Path("/test")
 	@POST

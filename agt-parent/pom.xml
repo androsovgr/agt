@@ -7,11 +7,11 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>agt-common-beans</module>
+		<module>agt-interface-parent</module>
 		<module>agt-api-interface</module>
 		<module>agt-desktop-gui</module>
 		<module>agt-api-service</module>
 		<module>agt-services-parent</module>
-		<module>agt-interfaces-parent</module>
 		<module>agt-ear</module>
 	</modules>
 
@@ -21,6 +21,11 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>ru.mephi.agt</groupId>
+			<artifactId>agt-common-beans</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>

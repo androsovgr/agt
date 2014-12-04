@@ -5,6 +5,11 @@
     <artifactId>agt-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>agt-interfaces-parent</artifactId>
+  <artifactId>agt-interface-parent</artifactId>
   <packaging>pom</packaging>
+  <modules>
+  	<module>agt-interface-hazelcast</module>
+  	<module>agt-intarface-orchestration</module>
+  	<module>agt-interface-db</module>
+  </modules>
 </project>

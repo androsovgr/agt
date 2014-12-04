@@ -14,12 +14,14 @@ import org.slf4j.LoggerFactory;
 import ru.mephi.agt.model.User;
 import ru.mephi.agt.request.IdRequest;
 import ru.mephi.agt.request.LoginRequest;
+import ru.mephi.agt.request.MessageListRequest;
 import ru.mephi.agt.request.StringRequest;
 import ru.mephi.agt.request.UserRequest;
 import ru.mephi.agt.request.gui.GuiRequest;
 import ru.mephi.agt.response.BaseResponse;
 import ru.mephi.agt.response.IdResponse;
 import ru.mephi.agt.response.LoginResponse;
+import ru.mephi.agt.response.MessageListResponse;
 import ru.mephi.agt.response.UserResponse;
 import ru.mephi.agt.util.ErrorCode;
 import ru.mephi.agt.util.LogUtil;
@@ -36,6 +38,9 @@ public class LoginServiceImpl implements LoginService {
 
 	@EJB
 	private HazelcastService hazelcastService;
+
+	@EJB
+	private MessageService messageService;
 
 	@Override
 	public LoginResponse tryLogin(LoginRequest request) {
@@ -118,5 +123,40 @@ public class LoginServiceImpl implements LoginService {
 		}
 		// Get complete hashed password in hex format
 		return sb.toString();
+	}
+
+	@Override
+	public BaseResponse logout(IdRequest request) {
+		String methodName = "logout";
+		BaseResponse response = null;
+		LogUtil.logStarted(LOGGER, methodName, request);
+
+		try {
+			BaseResponse removeLoginedResponse = hazelcastService
+					.removeLogined(request);
+			if (ErrorCode.OK == removeLoginedResponse.getErrorCode()) {
+				MessageListResponse receiveMessagesResponse = hazelcastService
+						.receiveMessages(request);
+				if (ErrorCode.OK == receiveMessagesResponse.getErrorCode()) {
+					MessageListRequest storeMessagesRequest = new MessageListRequest(
+							request.getTransactionId(),
+							receiveMessagesResponse.getMessages());
+					response = messageService
+							.storeMessages(storeMessagesRequest);
+				} else {
+					response = new BaseResponse(
+							receiveMessagesResponse.getErrorCode(),
+							receiveMessagesResponse.getErrorMessage());
+				}
+			} else {
+				response = removeLoginedResponse;
+			}
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+			response = new BaseResponse(ErrorCode.INTERNAL_ERROR, null);
+		}
+
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+		return response;
 	}
 }

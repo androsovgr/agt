@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
 import ru.mephi.agt.model.Message;
 import ru.mephi.agt.request.IdListRequest;
 import ru.mephi.agt.request.IdRequest;
+import ru.mephi.agt.request.MessageRequest;
 import ru.mephi.agt.request.gui.GuiRequest;
-import ru.mephi.agt.request.gui.MessageGuiRequest;
 import ru.mephi.agt.response.BaseResponse;
 import ru.mephi.agt.response.IdListResponse;
 import ru.mephi.agt.response.MessageListResponse;
@@ -95,18 +95,19 @@ public class HazelcastServiceImpl implements HazelcastService {
 	}
 
 	@Override
-	public BaseResponse addMessage(MessageGuiRequest request) {
+	public BaseResponse addMessage(MessageRequest request) {
 		String methodName = "addMessage";
 		BaseResponse response = null;
 
 		LogUtil.logStarted(LOGGER, methodName, request);
 		try {
-			MessageList messageList = messagesMap.get(request.getOwnId());
+			long receiverId = request.getMessage().getMessageReceiver();
+			MessageList messageList = messagesMap.get(receiverId);
 			if (messageList == null) {
 				messageList = new MessageList();
 			}
 			messageList.getMessages().add(request.getMessage());
-			messagesMap.put(request.getOwnId(), messageList);
+			messagesMap.put(receiverId, messageList);
 		} catch (Exception e) {
 			LogUtil.logError(LOGGER, methodName, request, e);
 			response = new BaseResponse(ErrorCode.INTERNAL_ERROR,
@@ -118,13 +119,13 @@ public class HazelcastServiceImpl implements HazelcastService {
 	}
 
 	@Override
-	public MessageListResponse receiveMessages(GuiRequest request) {
+	public MessageListResponse receiveMessages(IdRequest request) {
 		String methodName = "receiveMessages";
 		MessageListResponse response = null;
 
 		LogUtil.logStarted(LOGGER, methodName, request);
 		try {
-			MessageList messageList = messagesMap.get(request.getOwnId());
+			MessageList messageList = messagesMap.remove(request.getId());
 			if (messageList != null) {
 				response = new MessageListResponse(messageList.getMessages());
 			} else {

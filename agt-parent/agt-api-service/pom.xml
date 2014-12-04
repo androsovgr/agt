@@ -12,25 +12,31 @@
 	<dependencies>
 		<dependency>
 			<groupId>ru.mephi.agt</groupId>
-			<artifactId>agt-common-beans</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>ru.mephi.agt</groupId>
 			<artifactId>agt-api-interface</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>ru.mephi.agt</groupId>
-			<artifactId>agt-service-login</artifactId>
+			<artifactId>agt-common-beans</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>ru.mephi.agt</groupId>
-			<artifactId>agt-service-hazelcast</artifactId>
+			<artifactId>agt-intarface-orchestration</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>ru.mephi.agt</groupId>
+			<artifactId>agt-interface-db</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>ru.mephi.agt</groupId>
+			<artifactId>agt-interface-hazelcast</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>

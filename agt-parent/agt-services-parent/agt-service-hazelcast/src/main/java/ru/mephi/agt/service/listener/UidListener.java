@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import ru.mephi.agt.request.IdRequest;
 import ru.mephi.agt.request.ObjectRequest;
 import ru.mephi.agt.response.BaseResponse;
-import ru.mephi.agt.service.HazelcastService;
+import ru.mephi.agt.service.LoginService;
 import ru.mephi.agt.util.LogUtil;
 
 import com.hazelcast.core.EntryEvent;
@@ -43,11 +43,11 @@ public class UidListener implements EntryListener<Long, String> {
 		BaseResponse response = null;
 		LogUtil.logStarted(LOGGER, methodName, request);
 		try {
-			String url = "java:global/agt-ear/agt-service-hazelcast/HazelcastServiceImpl";
-			HazelcastService hazelcastService = (HazelcastService) new InitialContext()
+			String url = "java:global/agt-ear/agt-service-login/LoginServiceImpl";
+			LoginService loginService = (LoginService) new InitialContext()
 					.lookup(url);
 			IdRequest idRequest = new IdRequest(event.getKey());
-			response = hazelcastService.removeLogined(idRequest);
+			response = loginService.logout(idRequest);
 		} catch (NamingException e) {
 			LogUtil.logError(LOGGER, methodName, request, e);
 		}

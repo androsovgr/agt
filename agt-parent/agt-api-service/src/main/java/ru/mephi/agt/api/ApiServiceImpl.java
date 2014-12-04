@@ -1,5 +1,7 @@
 package ru.mephi.agt.api;
 
+import java.util.Date;
+
 import javax.ejb.EJB;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -9,13 +11,16 @@ import org.slf4j.LoggerFactory;
 
 import ru.mephi.agt.api.request.AddContactGuiRequest;
 import ru.mephi.agt.api.request.IdListGuiRequest;
+import ru.mephi.agt.api.request.SendMessageGuiRequest;
 import ru.mephi.agt.api.request.UserGuiRequest;
 import ru.mephi.agt.model.Contact;
+import ru.mephi.agt.model.Message;
 import ru.mephi.agt.model.User;
 import ru.mephi.agt.request.ContactRequest;
 import ru.mephi.agt.request.IdListRequest;
 import ru.mephi.agt.request.IdRequest;
 import ru.mephi.agt.request.LoginRequest;
+import ru.mephi.agt.request.MessageRequest;
 import ru.mephi.agt.request.StringRequest;
 import ru.mephi.agt.request.UserRequest;
 import ru.mephi.agt.request.gui.GuiRequest;
@@ -168,6 +173,29 @@ public class ApiServiceImpl implements ApiService {
 		} catch (Exception e) {
 			LogUtil.logError(LOGGER, methodName, request, e);
 			response = new IdListResponse(ErrorCode.INTERNAL_ERROR, null);
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+		return response;
+	}
+
+	@Override
+	public BaseResponse sendMessage(SendMessageGuiRequest request) {
+		String methodName = "sendMessage";
+		BaseResponse response = null;
+		LogUtil.logStarted(LOGGER, methodName, request);
+		try {
+			if (checkLogined(request)) {
+				Message message = new Message(0L, new Date(),
+						request.getMessage(), request.getOwnId(),
+						request.getReceiverId());
+				response = hazelcastService.addMessage(new MessageRequest(
+						request.getTransactionId(), message));
+			} else {
+				response = new BaseResponse(ErrorCode.UNAUTHORIZED, null);
+			}
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+			response = new BaseResponse(ErrorCode.INTERNAL_ERROR, null);
 		}
 		LogUtil.logFinished(LOGGER, methodName, request, response);
 		return response;

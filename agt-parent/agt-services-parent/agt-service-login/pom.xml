@@ -6,7 +6,7 @@
 		<artifactId>agt-services-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>agt-service-login</artifactId>
+	<artifactId>agt-service-orchestration</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>ru.mephi.agt</groupId>
@@ -15,7 +15,12 @@
 		</dependency>
 		<dependency>
 			<groupId>ru.mephi.agt</groupId>
-			<artifactId>agt-service-hazelcast</artifactId>
+			<artifactId>agt-interface-hazelcast</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ru.mephi.agt</groupId>
+			<artifactId>agt-intarface-orchestration</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
