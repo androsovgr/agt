@@ -5,6 +5,7 @@ import ru.mephi.agt.request.IdRequest;
 import ru.mephi.agt.request.MessageRequest;
 import ru.mephi.agt.request.gui.GuiRequest;
 import ru.mephi.agt.response.BaseResponse;
+import ru.mephi.agt.response.BooleanResponse;
 import ru.mephi.agt.response.IdListResponse;
 import ru.mephi.agt.response.MessageListResponse;
 
@@ -21,5 +22,7 @@ public interface HazelcastService {
 	public IdListResponse checkOnline(IdListRequest request);
 
 	public BaseResponse removeLogined(IdRequest request);
+
+	public BooleanResponse checkOnline(IdRequest request);
 
 }

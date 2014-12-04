@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import ru.mephi.agt.model.Message;
 import ru.mephi.agt.request.IdRequest;
 import ru.mephi.agt.request.MessageListRequest;
+import ru.mephi.agt.request.MessageRequest;
 import ru.mephi.agt.response.BaseResponse;
 import ru.mephi.agt.response.MessageListResponse;
 import ru.mephi.agt.util.ErrorCode;
@@ -33,7 +34,7 @@ public class MessageServiceImpl implements MessageService {
 
 	@Override
 	public BaseResponse storeMessages(MessageListRequest request) {
-		final String methodName = "getMessages";
+		final String methodName = "storeMessages";
 		LogUtil.logStarted(LOGGER, methodName, request);
 		BaseResponse response = null;
 		try {
@@ -46,6 +47,24 @@ public class MessageServiceImpl implements MessageService {
 			LogUtil.logError(LOGGER, methodName, request, e);
 			response = new BaseResponse(ErrorCode.INTERNAL_ERROR,
 					"Can't store messages to DB");
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+		return response;
+	}
+
+	@Override
+	public BaseResponse storeMessage(MessageRequest request) {
+		final String methodName = "storeMessage";
+		LogUtil.logStarted(LOGGER, methodName, request);
+		BaseResponse response = null;
+		try {
+			em.persist(request.getMessage());
+			em.flush();
+			response = new BaseResponse();
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+			response = new BaseResponse(ErrorCode.INTERNAL_ERROR,
+					"Can't store message to DB");
 		}
 		LogUtil.logFinished(LOGGER, methodName, request, response);
 		return response;

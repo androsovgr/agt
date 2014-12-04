@@ -17,6 +17,7 @@ import ru.mephi.agt.request.IdRequest;
 import ru.mephi.agt.request.MessageRequest;
 import ru.mephi.agt.request.gui.GuiRequest;
 import ru.mephi.agt.response.BaseResponse;
+import ru.mephi.agt.response.BooleanResponse;
 import ru.mephi.agt.response.IdListResponse;
 import ru.mephi.agt.response.MessageListResponse;
 import ru.mephi.agt.service.model.MessageList;
@@ -108,6 +109,7 @@ public class HazelcastServiceImpl implements HazelcastService {
 			}
 			messageList.getMessages().add(request.getMessage());
 			messagesMap.put(receiverId, messageList);
+			response = new BaseResponse();
 		} catch (Exception e) {
 			LogUtil.logError(LOGGER, methodName, request, e);
 			response = new BaseResponse(ErrorCode.INTERNAL_ERROR,
@@ -176,7 +178,26 @@ public class HazelcastServiceImpl implements HazelcastService {
 			response = new BaseResponse();
 		} catch (Exception e) {
 			LogUtil.logError(LOGGER, methodName, request, e);
-			response = new IdListResponse(ErrorCode.INTERNAL_ERROR,
+			response = new BaseResponse(ErrorCode.INTERNAL_ERROR,
+					"Check logined");
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+
+		return response;
+	}
+
+	@Override
+	public BooleanResponse checkOnline(IdRequest request) {
+		String methodName = "checkOnline";
+		BooleanResponse response = null;
+
+		LogUtil.logStarted(LOGGER, methodName, request);
+		try {
+			boolean status = userSet.contains(request.getId());
+			response = new BooleanResponse(status);
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+			response = new BooleanResponse(ErrorCode.INTERNAL_ERROR,
 					"Check logined");
 		}
 		LogUtil.logFinished(LOGGER, methodName, request, response);

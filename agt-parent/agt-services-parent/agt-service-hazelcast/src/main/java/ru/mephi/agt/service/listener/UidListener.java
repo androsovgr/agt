@@ -9,20 +9,17 @@ import org.slf4j.LoggerFactory;
 import ru.mephi.agt.request.IdRequest;
 import ru.mephi.agt.request.ObjectRequest;
 import ru.mephi.agt.response.BaseResponse;
-import ru.mephi.agt.service.LoginService;
+import ru.mephi.agt.service.LoginOrchetrationService;
 import ru.mephi.agt.util.LogUtil;
 
 import com.hazelcast.core.EntryEvent;
 import com.hazelcast.core.EntryListener;
-import com.hazelcast.core.ISet;
 import com.hazelcast.core.MapEvent;
 
 public class UidListener implements EntryListener<Long, String> {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(UidListener.class);
-
-	private ISet<Long> userSet;
 
 	@Override
 	public void entryAdded(EntryEvent<Long, String> event) {
@@ -43,8 +40,8 @@ public class UidListener implements EntryListener<Long, String> {
 		BaseResponse response = null;
 		LogUtil.logStarted(LOGGER, methodName, request);
 		try {
-			String url = "java:global/agt-ear/agt-service-login/LoginServiceImpl";
-			LoginService loginService = (LoginService) new InitialContext()
+			String url = "java:global/agt-ear/agt-service-orchestration/LoginOrchestrationServiceImpl";
+			LoginOrchetrationService loginService = (LoginOrchetrationService) new InitialContext()
 					.lookup(url);
 			IdRequest idRequest = new IdRequest(event.getKey());
 			response = loginService.logout(idRequest);

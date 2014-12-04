@@ -32,7 +32,8 @@ import ru.mephi.agt.response.LoginResponse;
 import ru.mephi.agt.response.UserListResponse;
 import ru.mephi.agt.service.ContactService;
 import ru.mephi.agt.service.HazelcastService;
-import ru.mephi.agt.service.LoginService;
+import ru.mephi.agt.service.LoginOrchetrationService;
+import ru.mephi.agt.service.MessageOrchetrationService;
 import ru.mephi.agt.service.UserService;
 import ru.mephi.agt.util.ErrorCode;
 import ru.mephi.agt.util.LogUtil;
@@ -43,7 +44,10 @@ public class ApiServiceImpl implements ApiService {
 			.getLogger(ApiServiceImpl.class);
 
 	@EJB
-	private LoginService loginService;
+	private LoginOrchetrationService loginService;
+
+	@EJB
+	private MessageOrchetrationService messageOrchetrationService;
 
 	@EJB
 	private HazelcastService hazelcastService;
@@ -188,8 +192,9 @@ public class ApiServiceImpl implements ApiService {
 				Message message = new Message(0L, new Date(),
 						request.getMessage(), request.getOwnId(),
 						request.getReceiverId());
-				response = hazelcastService.addMessage(new MessageRequest(
-						request.getTransactionId(), message));
+				response = messageOrchetrationService
+						.sendMessage(new MessageRequest(request
+								.getTransactionId(), message));
 			} else {
 				response = new BaseResponse(ErrorCode.UNAUTHORIZED, null);
 			}
@@ -200,5 +205,4 @@ public class ApiServiceImpl implements ApiService {
 		LogUtil.logFinished(LOGGER, methodName, request, response);
 		return response;
 	}
-
 }

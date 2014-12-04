@@ -18,7 +18,7 @@
 		</dependency>
 		<dependency>
 			<groupId>ru.mephi.agt</groupId>
-			<artifactId>agt-service-login</artifactId>
+			<artifactId>agt-service-orchestration</artifactId>
 			<version>${project.version}</version>
 			<type>ejb</type>
 		</dependency>

@@ -11,6 +11,7 @@ import javafx.scene.text.TextFlow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ru.mephi.agt.desktop.MainApp;
 import ru.mephi.agt.desktop.constants.StyleClassContstant;
 import ru.mephi.agt.desktop.model.ContactModel;
 import ru.mephi.agt.desktop.util.ControllerUtil;
@@ -22,6 +23,8 @@ public class MessagesController {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(MessagesController.class);
+
+	private MainApp mainApp;
 
 	private ContactModel contact;
 
@@ -40,7 +43,7 @@ public class MessagesController {
 	@FXML
 	private void sendMessage() {
 		BaseResponse response = ServerInteractor.sendMessage(contact,
-				message.getText());
+				message.getText(), mainApp.getOwnId(), mainApp.getUid());
 		if (ControllerUtil.handleResponse(response)) {
 			addToChat("ß", new Date(), message.getText());
 			message.clear();
@@ -65,6 +68,14 @@ public class MessagesController {
 
 	public void setContact(ContactModel contact) {
 		this.contact = contact;
+	}
+
+	public MainApp getMainApp() {
+		return mainApp;
+	}
+
+	public void setMainApp(MainApp mainApp) {
+		this.mainApp = mainApp;
 	}
 
 }

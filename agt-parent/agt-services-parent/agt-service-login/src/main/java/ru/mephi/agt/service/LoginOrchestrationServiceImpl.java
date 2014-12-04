@@ -27,11 +27,11 @@ import ru.mephi.agt.util.ErrorCode;
 import ru.mephi.agt.util.LogUtil;
 
 @Stateful
-@Local(LoginService.class)
-public class LoginServiceImpl implements LoginService {
+@Local(LoginOrchetrationService.class)
+public class LoginOrchestrationServiceImpl implements LoginOrchetrationService {
 
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(LoginServiceImpl.class);
+			.getLogger(LoginOrchestrationServiceImpl.class);
 
 	@EJB
 	private UserService userServiceInterface;

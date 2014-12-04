@@ -61,6 +61,7 @@ public class ChatListController {
 		}
 		MessagesController messagesController = loader.getController();
 		messagesController.setContact(contactModel);
+		messagesController.setMainApp(mainApp);
 		messageTabControllerMap.put(contactModel.getId(),
 				new MessageTabControllerBean(newTab, messagesController));
 	}

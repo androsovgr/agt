@@ -7,7 +7,7 @@ import ru.mephi.agt.response.BaseResponse;
 import ru.mephi.agt.response.IdResponse;
 import ru.mephi.agt.response.LoginResponse;
 
-public interface LoginService {
+public interface LoginOrchetrationService {
 
 	public LoginResponse tryLogin(LoginRequest request);
 

@@ -23,6 +23,7 @@
 
 		<class>ru.mephi.agt.model.User</class>
 		<class>ru.mephi.agt.model.Contact</class>
+		<class>ru.mephi.agt.model.Message</class>
 		<properties>
 			<!-- Properties for Hibernate -->
 			<property name="hibernate.hbm2ddl.auto" value="update" />

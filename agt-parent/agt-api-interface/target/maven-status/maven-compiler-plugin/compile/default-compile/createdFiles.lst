@@ -4,5 +4,6 @@ ru\mephi\agt\api\request\AddContactGuiRequest.class
 ru\mephi\agt\api\request\IdListGuiRequest.class
 ru\mephi\agt\api\RegistrationService.class
 ru\mephi\agt\api\response\MessageListResponse.class
+ru\mephi\agt\api\request\SendMessageGuiRequest.class
 ru\mephi\agt\api\ApiService.class
 ru\mephi\agt\api\response\SearchResponse.class

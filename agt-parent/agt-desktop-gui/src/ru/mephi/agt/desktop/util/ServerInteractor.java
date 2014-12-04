@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import ru.mephi.agt.api.ApiService;
 import ru.mephi.agt.api.request.AddContactGuiRequest;
 import ru.mephi.agt.api.request.IdListGuiRequest;
+import ru.mephi.agt.api.request.SendMessageGuiRequest;
 import ru.mephi.agt.api.request.UserGuiRequest;
 import ru.mephi.agt.api.response.MessageListResponse;
 import ru.mephi.agt.desktop.model.ContactModel;
@@ -91,9 +92,24 @@ public class ServerInteractor {
 		return response;
 	}
 
-	public static BaseResponse sendMessage(ContactModel contact, String message) {
-		LOGGER.info("Try send to contact: {} message:{}", contact, message);
-		return new BaseResponse();
+	public static BaseResponse sendMessage(ContactModel contact,
+			String message, long ownId, String uid) {
+		final String methodName = "sendMessage";
+		BaseResponse response = null;
+		SendMessageGuiRequest request = null;
+		try {
+			request = new SendMessageGuiRequest(ownId, uid, contact.getId(),
+					message);
+			LogUtil.logStarted(LOGGER, methodName, request);
+			ApiService api = ServerConnector.getApiInterface();
+			if (api != null) {
+				response = api.sendMessage(request);
+			}
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+		return response;
 	}
 
 	public static MessageListResponse getMessages(GuiRequest guiRequest) {
