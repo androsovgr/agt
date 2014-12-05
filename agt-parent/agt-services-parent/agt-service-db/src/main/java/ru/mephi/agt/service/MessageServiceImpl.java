@@ -71,7 +71,7 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
-	public MessageListResponse getMessages(IdRequest request) {
+	public MessageListResponse getMessagesAndDelete(IdRequest request) {
 		final String methodName = "getMessages";
 		LogUtil.logStarted(LOGGER, methodName, request);
 		MessageListResponse response = null;
@@ -81,6 +81,9 @@ public class MessageServiceImpl implements MessageService {
 			cb.add(Restrictions.eq("messageReceiver", request.getId()));
 			@SuppressWarnings("unchecked")
 			List<Message> messages = cb.list();
+			for (Message message : messages) {
+				em.remove(message);
+			}
 			response = new MessageListResponse(messages);
 		} catch (Exception e) {
 			LogUtil.logError(LOGGER, methodName, request, e);

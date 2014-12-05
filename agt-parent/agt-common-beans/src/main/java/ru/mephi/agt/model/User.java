@@ -37,7 +37,7 @@ public class User {
 	private String phone;
 	@Enumerated(EnumType.ORDINAL)
 	@Column(name = "gender_id")
-	private Gender gender = Gender.EMPTY;
+	private Gender gender;
 	@Enumerated(EnumType.ORDINAL)
 	@Column(name = "role_id")
 	private Role role = Role.USER;

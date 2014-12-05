@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane maxWidth="600.0" minHeight="100.0" minWidth="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.mephi.agt.desktop.view.UserEditController">
+	<columnConstraints>
+		<ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" prefWidth="100.0" />
+		<ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+		<ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" prefWidth="100.0" />
+		<ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+	</rowConstraints>
+	<children>
+		<Label text="ID" GridPane.halignment="RIGHT">
+         <padding>
+            <Insets right="2.0" />
+         </padding></Label>
+		<Label text="Имя" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+         <padding>
+            <Insets right="2.0" />
+         </padding></Label>
+		<Label text="Никнэйм" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
+         <padding>
+            <Insets right="2.0" />
+         </padding></Label>
+		<Label text="Фамилия" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+         <padding>
+            <Insets right="2.0" />
+         </padding></Label>
+		<Label text="Дата рождения" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+         <padding>
+            <Insets right="2.0" />
+         </padding></Label>
+		<Label text="Город" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+         <padding>
+            <Insets right="2.0" />
+         </padding></Label>
+		<Label text="Страна" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+         <padding>
+            <Insets right="2.0" />
+         </padding></Label>
+		<Label text="Пол" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+         <padding>
+            <Insets right="2.0" />
+         </padding></Label>
+		<TextField fx:id="nickTextField" GridPane.columnIndex="3">
+         <GridPane.margin>
+            <Insets left="2.0" />
+         </GridPane.margin></TextField>
+		<TextField fx:id="secondNameTextField" GridPane.columnIndex="3" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets left="2.0" />
+         </GridPane.margin></TextField>
+		<TextField fx:id="cityTextField" GridPane.columnIndex="3" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets left="2.0" />
+         </GridPane.margin></TextField>
+		<TextField fx:id="countryTextField" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets left="2.0" />
+         </GridPane.margin></TextField>
+		<DatePicker fx:id="birthTextField" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets left="2.0" />
+         </GridPane.margin></DatePicker>
+		<ComboBox fx:id="genderField" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets left="2.0" />
+         </GridPane.margin></ComboBox>
+		<TextField fx:id="firstNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets left="2.0" />
+         </GridPane.margin></TextField>
+      <Label fx:id="idLabel" text="Label" GridPane.columnIndex="1">
+         <GridPane.margin>
+            <Insets left="2.0" />
+         </GridPane.margin>
+      </Label>
+	</children>
+</GridPane>

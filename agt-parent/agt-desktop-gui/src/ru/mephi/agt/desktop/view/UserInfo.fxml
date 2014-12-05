@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.GridPane?>
+
+<GridPane hgap="10.0" maxHeight="200.0" maxWidth="600.0" minHeight="100.0" minWidth="600.0" prefHeight="100.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.mephi.agt.desktop.view.UserInfoController">
+	<columnConstraints>
+		<ColumnConstraints maxWidth="120.0" minWidth="120.0" prefWidth="120.0" />
+		<ColumnConstraints maxWidth="180.0" minWidth="180.0" prefWidth="180.0" />
+		<ColumnConstraints maxWidth="120.0" minWidth="120.0" prefWidth="120.0" />
+		<ColumnConstraints maxWidth="180.0" minWidth="180.0" prefWidth="180.0" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints minHeight="10.0" prefHeight="30.0" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0" />
+	</rowConstraints>
+	<children>
+		<Label text="ID" GridPane.halignment="RIGHT">
+			<padding>
+				<Insets right="4.0" />
+			</padding>
+		</Label>
+		<Label text="Никнэйм" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
+			<padding>
+				<Insets right="4.0" />
+			</padding>
+		</Label>
+		<Label text="Имя" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+			<padding>
+				<Insets right="4.0" />
+			</padding>
+		</Label>
+		<Label text="Фамилия" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+			<padding>
+				<Insets right="4.0" />
+			</padding>
+		</Label>
+		<Label text="Дата рождения" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+			<padding>
+				<Insets right="4.0" />
+			</padding>
+		</Label>
+		<Label text="Город" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+			<padding>
+				<Insets right="4.0" />
+			</padding>
+		</Label>
+		<Label text="Страна" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+			<padding>
+				<Insets right="4.0" />
+			</padding>
+		</Label>
+		<Label text="Пол" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+			<padding>
+				<Insets right="4.0" />
+			</padding>
+		</Label>
+		<Label fx:id="idLabel" text="Label" GridPane.columnIndex="1" />
+		<Label fx:id="nickLabel" text="Label" GridPane.columnIndex="3" />
+		<Label fx:id="firstNameLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+		<Label fx:id="secondNameLabel" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+		<Label fx:id="birthLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+		<Label fx:id="cityLabel" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+		<Label fx:id="countryLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+		<Label fx:id="genderLabel" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+	</children>
+</GridPane>

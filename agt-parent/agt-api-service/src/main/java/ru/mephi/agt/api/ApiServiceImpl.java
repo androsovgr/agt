@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ru.mephi.agt.api.request.AddContactGuiRequest;
+import ru.mephi.agt.api.request.IdGuiRequest;
 import ru.mephi.agt.api.request.IdListGuiRequest;
 import ru.mephi.agt.api.request.SendMessageGuiRequest;
 import ru.mephi.agt.api.request.UserGuiRequest;
@@ -29,11 +30,14 @@ import ru.mephi.agt.response.ContactListResponse;
 import ru.mephi.agt.response.IdListResponse;
 import ru.mephi.agt.response.IdResponse;
 import ru.mephi.agt.response.LoginResponse;
+import ru.mephi.agt.response.MessageListResponse;
 import ru.mephi.agt.response.UserListResponse;
+import ru.mephi.agt.response.UserResponse;
 import ru.mephi.agt.service.ContactService;
 import ru.mephi.agt.service.HazelcastService;
 import ru.mephi.agt.service.LoginOrchetrationService;
 import ru.mephi.agt.service.MessageOrchetrationService;
+import ru.mephi.agt.service.MessageService;
 import ru.mephi.agt.service.UserService;
 import ru.mephi.agt.util.ErrorCode;
 import ru.mephi.agt.util.LogUtil;
@@ -57,6 +61,9 @@ public class ApiServiceImpl implements ApiService {
 
 	@EJB
 	private ContactService contactService;
+
+	@EJB
+	private MessageService messageService;
 
 	public ApiServiceImpl() {
 	}
@@ -195,6 +202,93 @@ public class ApiServiceImpl implements ApiService {
 				response = messageOrchetrationService
 						.sendMessage(new MessageRequest(request
 								.getTransactionId(), message));
+			} else {
+				response = new BaseResponse(ErrorCode.UNAUTHORIZED, null);
+			}
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+			response = new BaseResponse(ErrorCode.INTERNAL_ERROR, null);
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+		return response;
+	}
+
+	@Override
+	public MessageListResponse receiveMessages(GuiRequest request) {
+		String methodName = "receiveMessages";
+		MessageListResponse response = null;
+		LogUtil.logStarted(LOGGER, methodName, request);
+		try {
+			if (checkLogined(request)) {
+				IdRequest receiveMessagesRequest = new IdRequest(
+						request.getTransactionId(), request.getOwnId());
+				response = hazelcastService
+						.receiveMessages(receiveMessagesRequest);
+			} else {
+				response = new MessageListResponse(ErrorCode.UNAUTHORIZED, null);
+			}
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+			response = new MessageListResponse(ErrorCode.INTERNAL_ERROR, null);
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+		return response;
+	}
+
+	@Override
+	public MessageListResponse receiveStoredMessages(GuiRequest request) {
+		String methodName = "receiveStoredMessages";
+		MessageListResponse response = null;
+		LogUtil.logStarted(LOGGER, methodName, request);
+		try {
+			if (checkLogined(request)) {
+				IdRequest receiveMessagesRequest = new IdRequest(
+						request.getTransactionId(), request.getOwnId());
+				response = messageService
+						.getMessagesAndDelete(receiveMessagesRequest);
+			} else {
+				response = new MessageListResponse(ErrorCode.UNAUTHORIZED, null);
+			}
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+			response = new MessageListResponse(ErrorCode.INTERNAL_ERROR, null);
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+		return response;
+	}
+
+	@Override
+	public UserResponse getUserInfo(IdGuiRequest request) {
+		String methodName = "getUserInfo";
+		UserResponse response = null;
+		LogUtil.logStarted(LOGGER, methodName, request);
+		try {
+			if (checkLogined(request)) {
+				IdRequest idRequest = new IdRequest(request.getTransactionId(),
+						request.getId());
+				response = userService.getUserById(idRequest);
+			} else {
+				response = new UserResponse(ErrorCode.UNAUTHORIZED, null);
+			}
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+			response = new UserResponse(ErrorCode.INTERNAL_ERROR, null);
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+		return response;
+	}
+
+	@Override
+	public BaseResponse updateSelfInfo(UserGuiRequest request) {
+		String methodName = "updateSelfInfo";
+		BaseResponse response = null;
+		LogUtil.logStarted(LOGGER, methodName, request);
+		try {
+			if (checkLogined(request)) {
+				User user = request.getUser();
+				user.setUserId(request.getOwnId());
+				UserRequest userRequest = new UserRequest(user);
+				response = userService.updateUser(userRequest);
 			} else {
 				response = new BaseResponse(ErrorCode.UNAUTHORIZED, null);
 			}

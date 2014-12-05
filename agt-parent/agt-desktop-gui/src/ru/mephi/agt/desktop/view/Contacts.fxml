@@ -20,6 +20,7 @@
                                     <MenuItem mnemonicParsing="false" onAction="#startChat" text="Начать чат" />
                                     <MenuItem mnemonicParsing="false" onAction="#showInfo" text="Личные данные" />
                                     <MenuItem mnemonicParsing="false" onAction="#startSearch" text="Поиск" />
+                                     <MenuItem mnemonicParsing="false" onAction="#showSelfInfo" text="Собственная информация" />
                                  </items>
                               </ContextMenu>
                            </contextMenu>

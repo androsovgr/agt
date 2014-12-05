@@ -73,16 +73,22 @@ public class LoginController {
 		} else {
 			try {
 				login = Long.parseLong(loginText);
+			} catch (NumberFormatException e) {
+				LOGGER.warn("Can't parse login");
+			}
+			try {
 				LoginResponse response = ServerInteractor
 						.login(login, password);
 				if (ControllerUtil.handleResponse(response)) {
 					mainApp.setUid(response.getUid());
 					mainApp.setOwnId(login);
 					mainApp.initContacts();
+					mainApp.receiveStoredMessages();
 				}
-			} catch (NumberFormatException e) {
-				LOGGER.warn("Can't parse login");
+			} catch (Exception e) {
+				LOGGER.error("Something is not OK", e);
 			}
+
 		}
 	}
 

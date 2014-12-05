@@ -10,7 +10,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>ru.mephi.agt</groupId>
-			<artifactId>agt-service-db</artifactId>
+			<artifactId>agt-interface-db</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

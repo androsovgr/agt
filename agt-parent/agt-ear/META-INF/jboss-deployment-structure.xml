@@ -4,7 +4,8 @@
 	<deployment>
 		<dependencies>
 			<module name="com.hazelcast" export="true" />
-			<module name="com.fasterxml.jackson.core" export="true" />
+			<module name="com.fasterxml.jackson" export="true" />
+			<module name="org.hibernate" export="true" />
 		</dependencies>
 	</deployment>
 </jboss-deployment-structure>

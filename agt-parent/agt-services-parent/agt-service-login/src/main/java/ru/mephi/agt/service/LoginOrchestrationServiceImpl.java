@@ -11,6 +11,7 @@ import javax.ejb.Stateful;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ru.mephi.agt.model.Gender;
 import ru.mephi.agt.model.User;
 import ru.mephi.agt.request.IdRequest;
 import ru.mephi.agt.request.LoginRequest;
@@ -97,6 +98,7 @@ public class LoginOrchestrationServiceImpl implements LoginOrchetrationService {
 			String passwordHash = getHash(password);
 			User user = new User();
 			user.setPassword(passwordHash);
+			user.setGender(Gender.EMPTY);
 			UserRequest userRequest = new UserRequest(
 					request.getTransactionId(), user);
 			response = userServiceInterface.addUser(userRequest);
@@ -138,11 +140,15 @@ public class LoginOrchestrationServiceImpl implements LoginOrchetrationService {
 				MessageListResponse receiveMessagesResponse = hazelcastService
 						.receiveMessages(request);
 				if (ErrorCode.OK == receiveMessagesResponse.getErrorCode()) {
-					MessageListRequest storeMessagesRequest = new MessageListRequest(
-							request.getTransactionId(),
-							receiveMessagesResponse.getMessages());
-					response = messageService
-							.storeMessages(storeMessagesRequest);
+					if (!receiveMessagesResponse.getMessages().isEmpty()) {
+						MessageListRequest storeMessagesRequest = new MessageListRequest(
+								request.getTransactionId(),
+								receiveMessagesResponse.getMessages());
+						response = messageService
+								.storeMessages(storeMessagesRequest);
+					} else {
+						response = new BaseResponse();
+					}
 				} else {
 					response = new BaseResponse(
 							receiveMessagesResponse.getErrorCode(),

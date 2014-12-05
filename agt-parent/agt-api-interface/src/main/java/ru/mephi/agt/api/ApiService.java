@@ -8,6 +8,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import ru.mephi.agt.api.request.AddContactGuiRequest;
+import ru.mephi.agt.api.request.IdGuiRequest;
 import ru.mephi.agt.api.request.IdListGuiRequest;
 import ru.mephi.agt.api.request.SendMessageGuiRequest;
 import ru.mephi.agt.api.request.UserGuiRequest;
@@ -19,7 +20,9 @@ import ru.mephi.agt.response.ContactListResponse;
 import ru.mephi.agt.response.IdListResponse;
 import ru.mephi.agt.response.IdResponse;
 import ru.mephi.agt.response.LoginResponse;
+import ru.mephi.agt.response.MessageListResponse;
 import ru.mephi.agt.response.UserListResponse;
+import ru.mephi.agt.response.UserResponse;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
@@ -53,6 +56,22 @@ public interface ApiService {
 	@Path("/sendMesage")
 	@POST
 	public BaseResponse sendMessage(SendMessageGuiRequest request);
+
+	@Path("/receiveMessages")
+	@POST
+	public MessageListResponse receiveMessages(GuiRequest request);
+
+	@Path("/receiveStoredMessages")
+	@POST
+	public MessageListResponse receiveStoredMessages(GuiRequest request);
+
+	@Path("/getUserInfo")
+	@POST
+	public UserResponse getUserInfo(IdGuiRequest request);
+
+	@Path("/updateSelfInfo")
+	@POST
+	public BaseResponse updateSelfInfo(UserGuiRequest request);
 
 	@Path("/test")
 	@POST

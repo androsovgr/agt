@@ -12,6 +12,8 @@ public class GenderTableCell extends TableCell<UserModel, Gender> {
 	@Override
 	protected void updateItem(Gender item, boolean empty) {
 		super.updateItem(item, empty);
-		setText(GENDER_CONVERTER.toString(item));
+		if (!empty) {
+			setText(GENDER_CONVERTER.toString(item));
+		}
 	}
 }

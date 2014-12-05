@@ -1,23 +1,20 @@
 package ru.mephi.agt.desktop.util;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ru.mephi.agt.api.ApiService;
 import ru.mephi.agt.api.request.AddContactGuiRequest;
+import ru.mephi.agt.api.request.IdGuiRequest;
 import ru.mephi.agt.api.request.IdListGuiRequest;
 import ru.mephi.agt.api.request.SendMessageGuiRequest;
 import ru.mephi.agt.api.request.UserGuiRequest;
-import ru.mephi.agt.api.response.MessageListResponse;
 import ru.mephi.agt.desktop.model.ContactModel;
 import ru.mephi.agt.desktop.model.UserModel;
 import ru.mephi.agt.model.Contact;
-import ru.mephi.agt.model.Message;
 import ru.mephi.agt.model.User;
 import ru.mephi.agt.request.LoginRequest;
 import ru.mephi.agt.request.StringRequest;
@@ -27,7 +24,9 @@ import ru.mephi.agt.response.ContactListResponse;
 import ru.mephi.agt.response.IdListResponse;
 import ru.mephi.agt.response.IdResponse;
 import ru.mephi.agt.response.LoginResponse;
+import ru.mephi.agt.response.MessageListResponse;
 import ru.mephi.agt.response.UserListResponse;
+import ru.mephi.agt.response.UserResponse;
 import ru.mephi.agt.util.LogUtil;
 
 public class ServerInteractor {
@@ -112,19 +111,40 @@ public class ServerInteractor {
 		return response;
 	}
 
-	public static MessageListResponse getMessages(GuiRequest guiRequest) {
-		List<Message> messages = new ArrayList<Message>();
-		for (int i = 0; i < /* Math.round(Math.random() * 3) */0; i++) {
-			Message message = new Message();
-			message.setMessageId(System.currentTimeMillis());
-			message.setMessage(UUID.randomUUID().toString());
-			message.setMessageSender(Math.round(Math.random() * 15));
-			message.setMessageTime(new Date());
-			messages.add(message);
+	public static MessageListResponse receiveMessages(String uid, long ownId) {
+		final String methodName = "receiveMessages";
+		MessageListResponse response = null;
+		GuiRequest request = null;
+		try {
+			request = new GuiRequest(ownId, uid);
+			LogUtil.logStarted(LOGGER, methodName, request);
+			ApiService api = ServerConnector.getApiInterface();
+			if (api != null) {
+				response = api.receiveMessages(request);
+			}
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
 		}
-		MessageListResponse response = new MessageListResponse(messages);
-		LOGGER.debug("Total got messages: {}", messages.size());
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+		return response;
+	}
 
+	public static MessageListResponse receiveStoredMessages(String uid,
+			long ownId) {
+		final String methodName = "receiveStoredMessages";
+		MessageListResponse response = null;
+		GuiRequest request = null;
+		try {
+			request = new GuiRequest(ownId, uid);
+			LogUtil.logStarted(LOGGER, methodName, request);
+			ApiService api = ServerConnector.getApiInterface();
+			if (api != null) {
+				response = api.receiveStoredMessages(request);
+			}
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
 		return response;
 	}
 
@@ -182,6 +202,42 @@ public class ServerInteractor {
 			ApiService api = ServerConnector.getApiInterface();
 			if (api != null) {
 				response = api.getStatuses(request);
+			}
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+		return response;
+	}
+
+	public static UserResponse getUser(long id, String uid, long ownId) {
+		final String methodName = "getUser";
+		UserResponse response = null;
+		IdGuiRequest request = null;
+		try {
+			request = new IdGuiRequest(ownId, uid, id);
+			LogUtil.logStarted(LOGGER, methodName, request);
+			ApiService api = ServerConnector.getApiInterface();
+			if (api != null) {
+				response = api.getUserInfo(request);
+			}
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+		return response;
+	}
+
+	public static BaseResponse updateOwnInfo(User user, String uid, long ownId) {
+		final String methodName = "updateOwnInfo";
+		BaseResponse response = null;
+		UserGuiRequest request = null;
+		try {
+			request = new UserGuiRequest(ownId, uid, user);
+			LogUtil.logStarted(LOGGER, methodName, request);
+			ApiService api = ServerConnector.getApiInterface();
+			if (api != null) {
+				response = api.updateSelfInfo(request);
 			}
 		} catch (Exception e) {
 			LogUtil.logError(LOGGER, methodName, request, e);

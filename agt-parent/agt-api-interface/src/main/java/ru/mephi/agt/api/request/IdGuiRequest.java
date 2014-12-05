@@ -24,4 +24,14 @@ public class IdGuiRequest extends GuiRequest {
 		super();
 	}
 
+	public IdGuiRequest(long id) {
+		super();
+		this.id = id;
+	}
+
+	public IdGuiRequest(long ownId, String uid, long id) {
+		super(ownId, uid);
+		this.id = id;
+	}
+
 }

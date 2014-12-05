@@ -15,13 +15,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ru.mephi.agt.api.response.MessageListResponse;
 import ru.mephi.agt.desktop.constants.ViewPathConstant;
 import ru.mephi.agt.desktop.converter.ContactConverter;
 import ru.mephi.agt.desktop.model.ContactModel;
@@ -32,18 +32,20 @@ import ru.mephi.agt.desktop.view.ChatListController;
 import ru.mephi.agt.desktop.view.ContactsController;
 import ru.mephi.agt.desktop.view.LoginController;
 import ru.mephi.agt.desktop.view.SearchController;
+import ru.mephi.agt.desktop.view.SelfInfoController;
 import ru.mephi.agt.model.Contact;
 import ru.mephi.agt.model.Message;
 import ru.mephi.agt.model.Status;
-import ru.mephi.agt.request.gui.GuiRequest;
 import ru.mephi.agt.response.ContactListResponse;
 import ru.mephi.agt.response.IdListResponse;
+import ru.mephi.agt.response.MessageListResponse;
 
 public class MainApp extends Application {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MainApp.class);
 	private Stage stage;
 	private Stage dialogStage;
+	private Stage selfInfoStage;
 	private Stage searchStage;
 	private ChatListController chatListController;
 	private ContactsController contactsController;
@@ -51,6 +53,7 @@ public class MainApp extends Application {
 	private long ownId;
 	private HashMap<Long, ContactModel> contactMap = new HashMap<Long, ContactModel>();
 	private List<Contact> contacts;
+	private SelfInfoController selfInfoController;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -96,6 +99,31 @@ public class MainApp extends Application {
 			stage.show();
 		} catch (IOException e) {
 			LOGGER.error("Can't find {}", ViewPathConstant.LOGIN_VIEW_PATH, e);
+		}
+	}
+
+	public void showSelfInfo() {
+		try {
+			// Load root layout from fxml file.
+			if (selfInfoStage == null) {
+				selfInfoStage = new Stage();
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(MainApp.class
+						.getResource(ViewPathConstant.SELF_INFO_VIEW_PATH));
+				VBox rootLayout = (VBox) loader.load();
+				selfInfoController = loader.getController();
+				selfInfoController.setMainApp(this);
+				// Show the scene containing the root layout.
+				Scene scene = new Scene(rootLayout);
+				selfInfoStage.setScene(scene);
+				selfInfoStage.setResizable(false);
+				selfInfoStage.sizeToScene();
+			}
+			selfInfoController.loadSelfInfo();
+			selfInfoStage.show();
+		} catch (IOException e) {
+			LOGGER.error("Can't find {}", ViewPathConstant.SELF_INFO_VIEW_PATH,
+					e);
 		}
 	}
 
@@ -184,7 +212,7 @@ public class MainApp extends Application {
 
 	public void updateAll() {
 		try {
-			List<Message> messages = getMessages();
+			List<Message> messages = receiveMessages();
 			updateContactStatuses();
 			List<ContactModel> delta = addReceivedMessagesForContactMap(messages);
 			contactsController.updateContactList(delta);
@@ -275,14 +303,24 @@ public class MainApp extends Application {
 		}
 	}
 
-	private List<Message> getMessages() {
-		MessageListResponse response = ServerInteractor
-				.getMessages(new GuiRequest());
+	private List<Message> receiveMessages() {
+		MessageListResponse response = ServerInteractor.receiveMessages(uid,
+				ownId);
 		if (ControllerUtil.handleResponse(response)) {
 			return response.getMessages();
 		} else {
-			// TODO
-			return null;
+			return new ArrayList<Message>();
+		}
+	}
+
+	public void receiveStoredMessages() throws IOException {
+		MessageListResponse response = ServerInteractor.receiveStoredMessages(
+				uid, ownId);
+		if (ControllerUtil.handleResponse(response)) {
+			List<Message> messages = response.getMessages();
+			List<ContactModel> delta = addReceivedMessagesForContactMap(messages);
+			contactsController.updateContactList(delta);
+			updateChats(messages);
 		}
 	}
 

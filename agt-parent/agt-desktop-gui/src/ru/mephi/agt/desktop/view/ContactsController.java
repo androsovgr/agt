@@ -102,6 +102,11 @@ public class ContactsController {
 	}
 
 	@FXML
+	private void showSelfInfo(ActionEvent event) {
+		mainApp.showSelfInfo();
+	}
+
+	@FXML
 	private void showInfo(ActionEvent event) {
 		ContactModel selected = getSelected();
 		if (selected != null) {

@@ -13,9 +13,9 @@ public class GuiRequest extends BaseRequest {
 		this.uid = uid;
 	}
 
-	public GuiRequest(long id, String uid) {
+	public GuiRequest(long ownId, String uid) {
 		super();
-		this.ownId = id;
+		this.ownId = ownId;
 		this.uid = uid;
 	}
 
@@ -31,8 +31,8 @@ public class GuiRequest extends BaseRequest {
 		return ownId;
 	}
 
-	public void setOwnId(long id) {
-		this.ownId = id;
+	public void setOwnId(long ownId) {
+		this.ownId = ownId;
 	}
 
 	public String getUid() {

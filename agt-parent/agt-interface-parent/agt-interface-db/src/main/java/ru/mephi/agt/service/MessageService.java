@@ -10,7 +10,7 @@ public interface MessageService {
 
 	public BaseResponse storeMessages(MessageListRequest request);
 
-	public MessageListResponse getMessages(IdRequest request);
+	public MessageListResponse getMessagesAndDelete(IdRequest request);
 
 	public BaseResponse storeMessage(MessageRequest request);
 }

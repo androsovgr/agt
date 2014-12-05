@@ -9,7 +9,6 @@ import javax.persistence.EntityManager;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import ru.mephi.agt.model.User;
 import ru.mephi.agt.request.IdRequest;
 import ru.mephi.agt.request.UserRequest;
+import ru.mephi.agt.response.BaseResponse;
 import ru.mephi.agt.response.IdResponse;
 import ru.mephi.agt.response.UserListResponse;
 import ru.mephi.agt.response.UserResponse;
@@ -68,6 +68,26 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public BaseResponse updateUser(UserRequest request) {
+		final String methodName = "updateUser";
+		LogUtil.logStarted(LOGGER, methodName, request);
+		BaseResponse response = null;
+		try {
+			User user = request.getUser();
+			User oldValue = em.find(User.class, user.getUserId());
+			user.setPassword(oldValue.getPassword());
+			em.merge(user);
+			em.flush();
+			response = new BaseResponse();
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+			response = new BaseResponse(ErrorCode.INTERNAL_ERROR, null);
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+		return response;
+	}
+
+	@Override
 	public UserListResponse searchUsers(UserRequest request) {
 		final String methodName = "searchUsers";
 		LogUtil.logStarted(LOGGER, methodName, request);
@@ -75,10 +95,48 @@ public class UserServiceImpl implements UserService {
 		try {
 			Session session = (Session) em.getDelegate();
 			Criteria cb = session.createCriteria(User.class);
-//			cb.addOrder(Order.asc("user_id"));
 			if (request.getUser().getUserId() != 0) {
-				cb.add(Restrictions.eqOrIsNull("user_id", request.getUser()
+				cb.add(Restrictions.eqOrIsNull("userId", request.getUser()
 						.getUserId()));
+			}
+			if (request.getUser().getNickName() != null
+					&& !request.getUser().getNickName().isEmpty()) {
+				cb.add(Restrictions.eqOrIsNull("nickName", request.getUser()
+						.getNickName()));
+			}
+			// ---
+			if (request.getUser().getFirstName() != null
+					&& !request.getUser().getFirstName().isEmpty()) {
+				cb.add(Restrictions.eqOrIsNull("firstName", request.getUser()
+						.getFirstName()));
+			}
+			if (request.getUser().getLastName() != null
+					&& !request.getUser().getLastName().isEmpty()) {
+				cb.add(Restrictions.eqOrIsNull("lastName", request.getUser()
+						.getLastName()));
+			}
+			if (request.getUser().getBirthDate() != null) {
+				cb.add(Restrictions.eqOrIsNull("birthDate", request.getUser()
+						.getBirthDate()));
+			}
+			if (request.getUser().getCity() != null
+					&& !request.getUser().getCity().isEmpty()) {
+				cb.add(Restrictions.eqOrIsNull("city", request.getUser()
+						.getCity()));
+			}
+			if (request.getUser().getCountry() != null
+					&& !request.getUser().getCountry().isEmpty()) {
+				cb.add(Restrictions.eqOrIsNull("country", request.getUser()
+						.getCountry()));
+			}
+			if (request.getUser().getPhone() != null
+					&& !request.getUser().getPhone().isEmpty()) {
+				cb.add(Restrictions.eqOrIsNull("phone", request.getUser()
+						.getPhone()));
+			}
+			if (request.getUser().getGender() != null) {
+				cb.add(Restrictions.eqOrIsNull("gender", request.getUser()
+						.getGender()));
 			}
 			@SuppressWarnings("unchecked")
 			List<User> users = cb.list();

@@ -1,6 +1,9 @@
 package ru.mephi.agt.desktop.view;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -112,9 +115,21 @@ public class SearchController {
 
 	private User collectUser() {
 		User user = new User();
-
 		try {
-			user.setUserId(Long.parseLong((idField.getText())));
+			if (idField.getText() != null && !idField.getText().isEmpty()) {
+				user.setUserId(Long.parseLong((idField.getText())));
+			}
+			user.setNickName(nickField.getText());
+			user.setFirstName(firstNameField.getText());
+			user.setLastName(lastNameField.getText());
+			if (birthDateField.getValue() != null) {
+				Instant i = birthDateField.getValue().atStartOfDay()
+						.atZone(ZoneId.systemDefault()).toInstant();
+				user.setBirthDate(Date.from(i));
+			}
+			user.setCity(cityField.getText());
+			user.setCountry(countryField.getText());
+			user.setGender(genderField.getValue());
 		} catch (Exception e) {
 			LOGGER.warn("Invalid filters");
 		}
