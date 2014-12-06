@@ -1,0 +1,10 @@
+@CHARSET "UTF-8";
+
+.message-header {
+	-fx-font-weight: bold;
+	-fx-stroke: indigo;
+}
+
+.message-body {
+	
+}
