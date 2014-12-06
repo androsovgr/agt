@@ -41,6 +41,7 @@ public class ServerConnector {
 		if (context != null) {
 			ResteasyWebTarget target = client.target(context);
 			apiInterface = target.proxy(ApiService.class);
+			LOGGER.info("Created REST client for context: {}", context);
 		}
 	}
 

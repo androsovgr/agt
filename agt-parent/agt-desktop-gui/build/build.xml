@@ -1,161 +1,172 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="agt-desktop-gui" default="do-deploy" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
+	<project name="agt-desktop-gui" default="do-deploy" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
 	<target name="init-fx-tasks">
 		<path id="fxant">
 			<filelist>
-				<file name="${java.home}\..\lib\ant-javafx.jar" />
-				<file name="${java.home}\lib\jfxrt.jar" />
-				<file name="${basedir}" />
+				<file name="${java.home}\..\lib\ant-javafx.jar"/>
+				<file name="${java.home}\lib\jfxrt.jar"/>
 			</filelist>
 		</path>
-
-		<taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpathref="fxant" />
+	
+		<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"      
+			uri="javafx:com.sun.javafx.tools.ant"
+			classpathref="fxant"/>
 	</target>
 	<target name="setup-staging-area">
 		<delete dir="externalLibs" />
 		<delete dir="project" />
 		<delete dir="projectRefs" />
-
+		
 		<mkdir dir="externalLibs" />
-
+		
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\org\apache\httpcomponents\httpcore\4.2.5">
-				<filename name="httpcore-4.2.5.jar" />
+				<filename name="httpcore-4.2.5.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\org\apache\httpcomponents\httpclient\4.2.6">
-				<filename name="httpclient-4.2.6.jar" />
+				<filename name="httpclient-4.2.6.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\org\slf4j\slf4j-api\1.7.7">
-				<filename name="slf4j-api-1.7.7.jar" />
-			</fileset>
-		</copy>
-		<copy todir="externalLibs">
-			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\org\slf4j\slf4j-simple\1.7.7">
-				<filename name="slf4j-simple-1.7.7.jar" />
+				<filename name="slf4j-api-1.7.7.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\org\jboss\resteasy\resteasy-client\3.0.10.Final">
-				<filename name="resteasy-client-3.0.10.Final.jar" />
+				<filename name="resteasy-client-3.0.10.Final.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\commons-logging\commons-logging\1.1.1">
-				<filename name="commons-logging-1.1.1.jar" />
+				<filename name="commons-logging-1.1.1.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\com\jidesoft\jidefx-decoration\0.9.1-b128">
-				<filename name="jidefx-decoration-0.9.1-b128.jar" />
+				<filename name="jidefx-decoration-0.9.1-b128.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\com\jidesoft\jidefx-common\0.9.1-b128">
-				<filename name="jidefx-common-0.9.1-b128.jar" />
+				<filename name="jidefx-common-0.9.1-b128.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\org\jboss\spec\javax\annotation\jboss-annotations-api_1.1_spec\1.0.1.Final">
-				<filename name="jboss-annotations-api_1.1_spec-1.0.1.Final.jar" />
+				<filename name="jboss-annotations-api_1.1_spec-1.0.1.Final.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\com\fasterxml\jackson\module\jackson-module-jaxb-annotations\2.4.1">
-				<filename name="jackson-module-jaxb-annotations-2.4.1.jar" />
+				<filename name="jackson-module-jaxb-annotations-2.4.1.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\org\jboss\resteasy\resteasy-jaxrs\3.0.10.Final">
-				<filename name="resteasy-jaxrs-3.0.10.Final.jar" />
+				<filename name="resteasy-jaxrs-3.0.10.Final.jar"/>	
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\log4j\log4j\1.2.17">
+				<filename name="log4j-1.2.17.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\com\jidesoft\jidefx-validation\0.9.1-b128">
-				<filename name="jidefx-validation-0.9.1-b128.jar" />
+				<filename name="jidefx-validation-0.9.1-b128.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\net\jcip\jcip-annotations\1.0">
-				<filename name="jcip-annotations-1.0.jar" />
+				<filename name="jcip-annotations-1.0.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.4.1">
-				<filename name="jackson-core-2.4.1.jar" />
+				<filename name="jackson-core-2.4.1.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\org\jboss\resteasy\jaxrs-api\3.0.10.Final">
-				<filename name="jaxrs-api-3.0.10.Final.jar" />
+				<filename name="jaxrs-api-3.0.10.Final.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\org\jboss\resteasy\resteasy-jackson2-provider\3.0.10.Final">
-				<filename name="resteasy-jackson2-provider-3.0.10.Final.jar" />
+				<filename name="resteasy-jackson2-provider-3.0.10.Final.jar"/>	
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\org\hibernate\javax\persistence\hibernate-jpa-2.0-api\1.0.1.Final">
+				<filename name="hibernate-jpa-2.0-api-1.0.1.Final.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\ru\mephi\agt\agt-api-interface\0.0.1-SNAPSHOT">
-				<filename name="agt-api-interface-0.0.1-SNAPSHOT.jar" />
+				<filename name="agt-api-interface-0.0.1-SNAPSHOT.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.4.1">
-				<filename name="jackson-annotations-2.4.1.jar" />
+				<filename name="jackson-annotations-2.4.1.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\javax\activation\activation\1.1">
-				<filename name="activation-1.1.jar" />
+				<filename name="activation-1.1.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\org\controlsfx\controlsfx\8.0.6_20">
-				<filename name="controlsfx-8.0.6_20.jar" />
+				<filename name="controlsfx-8.0.6_20.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\commons-io\commons-io\2.1">
-				<filename name="commons-io-2.1.jar" />
+				<filename name="commons-io-2.1.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\ru\mephi\agt\agt-common-beans\0.0.1-SNAPSHOT">
-				<filename name="agt-common-beans-0.0.1-SNAPSHOT.jar" />
+				<filename name="agt-common-beans-0.0.1-SNAPSHOT.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\commons-codec\commons-codec\1.6">
-				<filename name="commons-codec-1.6.jar" />
+				<filename name="commons-codec-1.6.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.4.1">
-				<filename name="jackson-databind-2.4.1.jar" />
+				<filename name="jackson-databind-2.4.1.jar"/>	
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\org\slf4j\slf4j-log4j12\1.7.7">
+				<filename name="slf4j-log4j12-1.7.7.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\com\fasterxml\jackson\jaxrs\jackson-jaxrs-json-provider\2.4.1">
-				<filename name="jackson-jaxrs-json-provider-2.4.1.jar" />
+				<filename name="jackson-jaxrs-json-provider-2.4.1.jar"/>	
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
 			<fileset dir="C:\Users\GREGORY-HOME\.m2\repository\com\fasterxml\jackson\jaxrs\jackson-jaxrs-base\2.4.1">
-				<filename name="jackson-jaxrs-base-2.4.1.jar" />
+				<filename name="jackson-jaxrs-base-2.4.1.jar"/>	
 			</fileset>
 		</copy>
-
+		
 		<mkdir dir="project" />
 		<copy todir="project">
 			<fileset dir="C:\dev\study\git\agt\agt-parent\agt-desktop-gui">
 				<include name="src/**" />
 			</fileset>
 		</copy>
-
+		
 		<mkdir dir="projectRefs" />
 	</target>
 	<target name='do-compile'>
@@ -163,115 +174,126 @@
 		<mkdir dir="build/src" />
 		<mkdir dir="build/libs" />
 		<mkdir dir="build/classes" />
-
+	
 		<!-- Copy project-libs references -->
 		<copy todir="build/libs">
 			<fileset dir="externalLibs">
-				<include name="commons-codec-1.6.jar" />
-				<include name="activation-1.1.jar" />
-				<include name="resteasy-client-3.0.10.Final.jar" />
-				<include name="jackson-jaxrs-json-provider-2.4.1.jar" />
-				<include name="jcip-annotations-1.0.jar" />
-				<include name="slf4j-simple-1.7.7.jar" />
-				<include name="agt-api-interface-0.0.1-SNAPSHOT.jar" />
-				<include name="jackson-databind-2.4.1.jar" />
-				<include name="commons-logging-1.1.1.jar" />
-				<include name="controlsfx-8.0.6_20.jar" />
-				<include name="jidefx-validation-0.9.1-b128.jar" />
-				<include name="slf4j-api-1.7.7.jar" />
-				<include name="jackson-jaxrs-base-2.4.1.jar" />
-				<include name="jackson-annotations-2.4.1.jar" />
-				<include name="httpclient-4.2.6.jar" />
-				<include name="commons-io-2.1.jar" />
-				<include name="agt-common-beans-0.0.1-SNAPSHOT.jar" />
-				<include name="jaxrs-api-3.0.10.Final.jar" />
-				<include name="resteasy-jackson2-provider-3.0.10.Final.jar" />
-				<include name="jackson-core-2.4.1.jar" />
-				<include name="jidefx-common-0.9.1-b128.jar" />
-				<include name="resteasy-jaxrs-3.0.10.Final.jar" />
-				<include name="jackson-module-jaxb-annotations-2.4.1.jar" />
-				<include name="httpcore-4.2.5.jar" />
-				<include name="jidefx-decoration-0.9.1-b128.jar" />
-				<include name="jboss-annotations-api_1.1_spec-1.0.1.Final.jar" />
+				<include name="commons-codec-1.6.jar"/>
+				<include name="activation-1.1.jar"/>
+				<include name="resteasy-client-3.0.10.Final.jar"/>
+				<include name="jackson-jaxrs-json-provider-2.4.1.jar"/>
+				<include name="jcip-annotations-1.0.jar"/>
+				<include name="agt-api-interface-0.0.1-SNAPSHOT.jar"/>
+				<include name="jackson-databind-2.4.1.jar"/>
+				<include name="commons-logging-1.1.1.jar"/>
+				<include name="controlsfx-8.0.6_20.jar"/>
+				<include name="jidefx-validation-0.9.1-b128.jar"/>
+				<include name="slf4j-api-1.7.7.jar"/>
+				<include name="log4j-1.2.17.jar"/>
+				<include name="jackson-jaxrs-base-2.4.1.jar"/>
+				<include name="hibernate-jpa-2.0-api-1.0.1.Final.jar"/>
+				<include name="jackson-annotations-2.4.1.jar"/>
+				<include name="httpclient-4.2.6.jar"/>
+				<include name="commons-io-2.1.jar"/>
+				<include name="agt-common-beans-0.0.1-SNAPSHOT.jar"/>
+				<include name="jaxrs-api-3.0.10.Final.jar"/>
+				<include name="resteasy-jackson2-provider-3.0.10.Final.jar"/>
+				<include name="jackson-core-2.4.1.jar"/>
+				<include name="jidefx-common-0.9.1-b128.jar"/>
+				<include name="resteasy-jaxrs-3.0.10.Final.jar"/>
+				<include name="jackson-module-jaxb-annotations-2.4.1.jar"/>
+				<include name="httpcore-4.2.5.jar"/>
+				<include name="jidefx-decoration-0.9.1-b128.jar"/>
+				<include name="jboss-annotations-api_1.1_spec-1.0.1.Final.jar"/>
+				<include name="slf4j-log4j12-1.7.7.jar"/>
 			</fileset>
 		</copy>
-
+	
 		<!-- Copy project references -->
-
+	
 		<!-- Copy project sources itself -->
 		<copy todir="build/src">
 			<fileset dir="project/src">
-				<include name="**/*" />
+				<include name="**/*"/>
 			</fileset>
 		</copy>
-
+	
 		<javac includeantruntime="false" source="1.8" target="1.8" srcdir="build/src" destdir="build/classes" encoding="Cp1251">
 			<classpath>
 				<fileset dir="build/libs">
-					<include name="*" />
+					<include name="*"/>
 				</fileset>
 			</classpath>
 		</javac>
-
+		
 		<!-- Copy over none Java-Files -->
 		<copy todir="build/classes">
-			<fileset dir="project/src">
-				<exclude name="**/*.java" />
-			</fileset>
+		<fileset dir="project/src">
+			<exclude name="**/*.java"/>
+		</fileset>
 		</copy>
-
-
+	
+	
 	</target>
 	<target name="do-deploy" depends="setup-staging-area, do-compile, init-fx-tasks">
-		<delete file="dist" />
+		<delete file="dist"/>
 		<delete file="deploy" />
-
+		
 		<mkdir dir="dist" />
 		<mkdir dir="dist/libs" />
-
+		
 		<copy todir="dist/libs">
 			<fileset dir="externalLibs">
 				<include name="*" />
 			</fileset>
 		</copy>
-
-
+		
+		
 		<fx:resources id="appRes">
-			<fx:fileset dir="dist" includes="agt-desktop-gui.jar" />
-			<fx:fileset dir="dist" includes="libs/*" />
-			<fx:fileset dir="dist" includes="resources/**" />
-		</fx:resources>
-
-		<fx:application id="fxApplication" name="AGT-messenger" mainClass="ru.mephi.agt.desktop.MainApp" />
-
+			<fx:fileset dir="dist" includes="agt-desktop-gui.jar"/>
+			<fx:fileset dir="dist" includes="libs/*"/>
+		</fx:resources> 
+		
+		<fx:application id="fxApplication"
+			name="AGT-messenger"
+			mainClass="ru.mephi.agt.desktop.MainApp"
+		/>
+	
 		<mkdir dir="build/classes/META-INF" />
-
-
-
+		
+		
+		
 		<fx:jar destfile="dist/agt-desktop-gui.jar">
-			<fx:application refid="fxApplication" />
+			<fx:application refid="fxApplication"/>
 			<fileset dir="build/classes">
 			</fileset>
-			<fx:resources refid="appRes" />
-
+			<fx:resources refid="appRes"/>
+			
 			<manifest>
-				<attribute name="Implementation-Vendor" value="MEPHI" />
-				<attribute name="Implementation-Title" value="AGT-messenger" />
-				<attribute name="Implementation-Version" value="0.0.1" />
-				<attribute name="JavaFX-Feature-Proxy" value="None" />
+				<attribute name="Implementation-Vendor" value="MEPHI"/>
+				<attribute name="Implementation-Title" value="AGT-messenger"/>
+				<attribute name="Implementation-Version" value="0.0.1"/>
+				<attribute name="JavaFX-Feature-Proxy" value="None"/>
 			</manifest>
 		</fx:jar>
-
-
+		
+	
 		<mkdir dir="deploy" />
 		<!-- Need to use ${basedir} because somehow the ant task is calculating the directory differently -->
-		<fx:deploy embedJNLP="false" extension="false" includeDT="false" offlineAllowed="true" outdir="${basedir}/deploy" outfile="agt-desktop-gui" nativeBundles="exe" updatemode="background">
-
-			<fx:info title="agt-desktop-gui" vendor="MEPHI" />
-			<fx:application refId="fxApplication" />
-			<fx:resources refid="appRes" />
+		<fx:deploy
+			embedJNLP="false"
+			extension="false"
+			includeDT="false"
+			offlineAllowed="true"
+			outdir="${basedir}/deploy"
+			outfile="agt-desktop-gui" nativeBundles="exe"
+			updatemode="background" >
+	
+			<fx:info title="agt-desktop-gui" vendor="MEPHI"/>
+			<fx:application refId="fxApplication"/>
+			<fx:resources refid="appRes"/>
 		</fx:deploy>
-
-
+		
+		
 	</target>
 </project>
