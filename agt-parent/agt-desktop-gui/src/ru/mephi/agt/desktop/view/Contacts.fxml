@@ -13,18 +13,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="300.0">
                      <children>
-                        <ListView fx:id="onlineListView" prefHeight="324.0" prefWidth="148.0">
-                           <contextMenu>
-                              <ContextMenu>
-                                 <items>
-                                    <MenuItem mnemonicParsing="false" onAction="#startChat" text="Начать чат" />
-                                    <MenuItem mnemonicParsing="false" onAction="#showInfo" text="Личные данные" />
-                                    <MenuItem mnemonicParsing="false" onAction="#startSearch" text="Поиск" />
-                                     <MenuItem mnemonicParsing="false" onAction="#showSelfInfo" text="Собственная информация" />
-                                 </items>
-                              </ContextMenu>
-                           </contextMenu>
-                        </ListView>
+                        <ListView fx:id="onlineListView" prefHeight="324.0" prefWidth="148.0" />
                      </children>
                   </AnchorPane>
             </content>
@@ -33,16 +22,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ListView fx:id="offlineListView" prefHeight="324.0" prefWidth="148.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <contextMenu>
-                              <ContextMenu>
-                                <items>
-                                  <MenuItem mnemonicParsing="false" onAction="#startChat" text="Начать чат" />
-                                    <MenuItem mnemonicParsing="false" onAction="#showInfo" text="Личные данные" />
-                                    <MenuItem mnemonicParsing="false" onAction="#startSearch" text="Поиск" />
-                                </items>
-                              </ContextMenu>
-                           </contextMenu></ListView>
+                        <ListView fx:id="offlineListView" prefHeight="324.0" prefWidth="148.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
             </content>
@@ -51,22 +31,24 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ListView fx:id="unknownListView" prefHeight="324.0" prefWidth="148.0">
-                           <contextMenu>
-                              <ContextMenu>
-                                 <items>
-                                    <MenuItem mnemonicParsing="false" onAction="#startChat" text="Начать чат" />
-                                    <MenuItem mnemonicParsing="false" onAction="#showInfo" text="Личные данные" />
-                                    <MenuItem mnemonicParsing="false" onAction="#startSearch" text="Поиск" />
-                                 </items>
-                              </ContextMenu>
-                           </contextMenu>
-                        </ListView>
+                        <ListView fx:id="unknownListView" prefHeight="324.0" prefWidth="148.0" />
                      </children>
                   </AnchorPane>
             </content>
           </TitledPane>
         </panes>
+         <contextMenu>
+            <ContextMenu onShowing="#validateMenu">
+               <items>
+                  <MenuItem fx:id="chatMenuItem" mnemonicParsing="false" onAction="#startChat" text="Начать чат" />
+                  <MenuItem fx:id="infoMenuItem" mnemonicParsing="false" onAction="#showInfo" text="Личные данные" />
+                  <MenuItem fx:id="renameMenuItem" mnemonicParsing="false" onAction="#updateContact" text="Переименовать" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="searchMenuItem" mnemonicParsing="false" onAction="#startSearch" text="Поиск" />
+                   <MenuItem fx:id="selfInfoMenuItem" mnemonicParsing="false" onAction="#showSelfInfo" text="Обо мне" />
+               </items>
+            </ContextMenu>
+         </contextMenu>
       </Accordion>
    </children>
 </AnchorPane>

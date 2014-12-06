@@ -9,7 +9,7 @@ import javax.naming.NamingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ru.mephi.agt.api.request.AddContactGuiRequest;
+import ru.mephi.agt.api.request.ContactGuiRequest;
 import ru.mephi.agt.api.request.IdGuiRequest;
 import ru.mephi.agt.api.request.IdListGuiRequest;
 import ru.mephi.agt.api.request.SendMessageGuiRequest;
@@ -118,7 +118,7 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public BaseResponse addContact(AddContactGuiRequest request) {
+	public BaseResponse addContact(ContactGuiRequest request) {
 		String methodName = "search";
 		BaseResponse response = null;
 		LogUtil.logStarted(LOGGER, methodName, request);
@@ -289,6 +289,31 @@ public class ApiServiceImpl implements ApiService {
 				user.setUserId(request.getOwnId());
 				UserRequest userRequest = new UserRequest(user);
 				response = userService.updateUser(userRequest);
+			} else {
+				response = new BaseResponse(ErrorCode.UNAUTHORIZED, null);
+			}
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+			response = new BaseResponse(ErrorCode.INTERNAL_ERROR, null);
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+		return response;
+	}
+
+	@Override
+	public BaseResponse updateContact(ContactGuiRequest request) {
+		String methodName = "updateContact";
+		BaseResponse response = null;
+		LogUtil.logStarted(LOGGER, methodName, request);
+		try {
+			if (checkLogined(request)) {
+				User user = new User();
+				user.setUserId(request.getUserId());
+				Contact contact = new Contact(request.getContactId(),
+						request.getOwnId(), request.getDisplayName(), user);
+				ContactRequest contactRequest = new ContactRequest(
+						request.getTransactionId(), contact);
+				response = contactService.updateContact(contactRequest);
 			} else {
 				response = new BaseResponse(ErrorCode.UNAUTHORIZED, null);
 			}

@@ -25,12 +25,12 @@ import org.slf4j.LoggerFactory;
 import ru.mephi.agt.desktop.constants.ViewPathConstant;
 import ru.mephi.agt.desktop.converter.ContactConverter;
 import ru.mephi.agt.desktop.model.ContactModel;
-import ru.mephi.agt.desktop.model.UserModel;
 import ru.mephi.agt.desktop.util.ControllerUtil;
 import ru.mephi.agt.desktop.util.ServerInteractor;
 import ru.mephi.agt.desktop.view.ChatListController;
 import ru.mephi.agt.desktop.view.ContactsController;
 import ru.mephi.agt.desktop.view.LoginController;
+import ru.mephi.agt.desktop.view.OtherInfoController;
 import ru.mephi.agt.desktop.view.SearchController;
 import ru.mephi.agt.desktop.view.SelfInfoController;
 import ru.mephi.agt.model.Contact;
@@ -46,14 +46,18 @@ public class MainApp extends Application {
 	private Stage stage;
 	private Stage dialogStage;
 	private Stage selfInfoStage;
+	private Stage otherInfoStage;
 	private Stage searchStage;
+
 	private ChatListController chatListController;
 	private ContactsController contactsController;
+	private SelfInfoController selfInfoController;
+	private OtherInfoController otherInfoController;
+
 	private String uid;
 	private long ownId;
 	private HashMap<Long, ContactModel> contactMap = new HashMap<Long, ContactModel>();
 	private List<Contact> contacts;
-	private SelfInfoController selfInfoController;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -127,6 +131,32 @@ public class MainApp extends Application {
 		}
 	}
 
+	public void showOtherInfo(long userId) {
+		try {
+			// Load root layout from fxml file.
+			if (otherInfoStage == null) {
+				otherInfoStage = new Stage();
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(MainApp.class
+						.getResource(ViewPathConstant.OTHER_INFO_VIEW_PATH));
+				VBox rootLayout = (VBox) loader.load();
+				otherInfoController = loader.getController();
+				otherInfoController.setMainApp(this);
+				otherInfoController.setStage(otherInfoStage);
+				// Show the scene containing the root layout.
+				Scene scene = new Scene(rootLayout);
+				otherInfoStage.setScene(scene);
+				otherInfoStage.setResizable(false);
+				otherInfoStage.sizeToScene();
+			}
+			otherInfoController.select(userId);
+			otherInfoStage.show();
+		} catch (IOException e) {
+			LOGGER.error("Can't find {}",
+					ViewPathConstant.OTHER_INFO_VIEW_PATH, e);
+		}
+	}
+
 	public void initContacts() {
 		try {
 			// Load root layout from fxml file.
@@ -136,6 +166,7 @@ public class MainApp extends Application {
 			AnchorPane rootLayout = (AnchorPane) loader.load();
 			contactsController = loader.getController();
 			contactsController.setMainApp(this);
+			contactsController.setStage(stage);
 			// Show the scene containing the root layout.
 			Scene scene = new Scene(rootLayout);
 			stage.setScene(scene);
@@ -171,10 +202,10 @@ public class MainApp extends Application {
 		}
 	}
 
-	public void startChatWith(UserModel userModel) {
-		ContactModel contactModel = contactMap.get(userModel.getId());
+	public void startChatWith(long userId) {
+		ContactModel contactModel = contactMap.get(userId);
 		if (contactModel == null) {
-			contactModel = createEmptyContactById(userModel.getId());
+			contactModel = createEmptyContactById(userId);
 		}
 		startChatWith(contactModel, true);
 	}
@@ -240,7 +271,7 @@ public class MainApp extends Application {
 	private ContactModel createEmptyContactById(long id) {
 		ContactModel contact = new ContactModel();
 		contact.setDisplayName(id + "");
-		contact.setIdProperty(id);
+		contact.setUserId(id);
 		contact.setStatus(Status.UNKNOWN);
 		contactMap.put(id, contact);
 		return contact;
@@ -266,12 +297,24 @@ public class MainApp extends Application {
 							.toGuiModel(contact);
 					guiContact.setStatus(Status.OFFLINE);
 					delta.add(guiContact);
-					contactMap.put(guiContact.getId(), guiContact);
+					contactMap.put(guiContact.getUserId(), guiContact);
+				} else {
+					ContactModel contactFromMap = contactMap.get(contact
+							.getUser().getUserId());
+					contactFromMap.setDisplayName(contact.getDisplayName());
+					contactFromMap.setContactId(contact.getContactId());
 				}
 			}
 		}
 		contactsController.updateContactList(delta);
 	}
+
+	// public void updateContactInfo(long userId, String contactName) {
+	// ContactModel contact = contactMap.get(userId);
+	// if (contact != null) {
+	// contact.setDisplayName(contactName);
+	// }
+	// }
 
 	private void updateContactStatuses() {
 		IdListResponse response = ServerInteractor.getOnlineOf(contacts, uid,
@@ -322,10 +365,6 @@ public class MainApp extends Application {
 			contactsController.updateContactList(delta);
 			updateChats(messages);
 		}
-	}
-
-	public void showInfoAbout(ContactModel contactModel) {
-		LOGGER.info("Try show info about: {}", contactModel);
 	}
 
 	public Stage getStage() {

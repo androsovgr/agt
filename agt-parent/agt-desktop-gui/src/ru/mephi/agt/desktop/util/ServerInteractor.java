@@ -7,13 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ru.mephi.agt.api.ApiService;
-import ru.mephi.agt.api.request.AddContactGuiRequest;
+import ru.mephi.agt.api.request.ContactGuiRequest;
 import ru.mephi.agt.api.request.IdGuiRequest;
 import ru.mephi.agt.api.request.IdListGuiRequest;
 import ru.mephi.agt.api.request.SendMessageGuiRequest;
 import ru.mephi.agt.api.request.UserGuiRequest;
 import ru.mephi.agt.desktop.model.ContactModel;
-import ru.mephi.agt.desktop.model.UserModel;
 import ru.mephi.agt.model.Contact;
 import ru.mephi.agt.model.User;
 import ru.mephi.agt.request.LoginRequest;
@@ -39,7 +38,7 @@ public class ServerInteractor {
 	}
 
 	public static LoginResponse login(long login, String password) {
-		final String methodName = "register";
+		final String methodName = "login";
 		LoginRequest request = null;
 		LoginResponse response = null;
 		try {
@@ -74,7 +73,7 @@ public class ServerInteractor {
 	}
 
 	public static ContactListResponse getContacts(long ownId, String uid) {
-		final String methodName = "register";
+		final String methodName = "getContacts";
 		ContactListResponse response = null;
 		GuiRequest request = null;
 		try {
@@ -97,8 +96,8 @@ public class ServerInteractor {
 		BaseResponse response = null;
 		SendMessageGuiRequest request = null;
 		try {
-			request = new SendMessageGuiRequest(ownId, uid, contact.getId(),
-					message);
+			request = new SendMessageGuiRequest(ownId, uid,
+					contact.getUserId(), message);
 			LogUtil.logStarted(LOGGER, methodName, request);
 			ApiService api = ServerConnector.getApiInterface();
 			if (api != null) {
@@ -150,7 +149,7 @@ public class ServerInteractor {
 
 	public static UserListResponse searchUsers(User filters, String uid,
 			long ownId) {
-		final String methodName = "register";
+		final String methodName = "searchUsers";
 		UserListResponse response = null;
 		UserGuiRequest request = null;
 		try {
@@ -167,18 +166,37 @@ public class ServerInteractor {
 		return response;
 	}
 
-	public static BaseResponse addUser(String displayName, UserModel userModel,
+	public static BaseResponse addContact(String displayName, long userId,
 			String uid, long ownId) {
-		final String methodName = "register";
+		final String methodName = "addContact";
 		BaseResponse response = null;
-		AddContactGuiRequest request = null;
+		ContactGuiRequest request = null;
 		try {
-			request = new AddContactGuiRequest(ownId, uid, userModel.getId(),
-					displayName);
+			request = new ContactGuiRequest(ownId, uid, 0, userId, displayName);
 			LogUtil.logStarted(LOGGER, methodName, request);
 			ApiService api = ServerConnector.getApiInterface();
 			if (api != null) {
 				response = api.addContact(request);
+			}
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+		return response;
+	}
+
+	public static BaseResponse updateContact(String displayName, long userId,
+			long contactId, String uid, long ownId) {
+		final String methodName = "updateContact";
+		BaseResponse response = null;
+		ContactGuiRequest request = null;
+		try {
+			request = new ContactGuiRequest(ownId, uid, contactId, userId,
+					displayName);
+			LogUtil.logStarted(LOGGER, methodName, request);
+			ApiService api = ServerConnector.getApiInterface();
+			if (api != null) {
+				response = api.updateContact(request);
 			}
 		} catch (Exception e) {
 			LogUtil.logError(LOGGER, methodName, request, e);

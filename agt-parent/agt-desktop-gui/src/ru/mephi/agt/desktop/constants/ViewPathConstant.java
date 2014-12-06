@@ -10,4 +10,5 @@ public class ViewPathConstant {
 	public static final String USER_INFO_VIEW_PATH = "view/UserInfo.fxml";
 	public static final String USER_EDIT_VIEW_PATH = "view/UserEdit.fxml";
 	public static final String SELF_INFO_VIEW_PATH = "view/SelfInfo.fxml";
+	public static final String OTHER_INFO_VIEW_PATH = "view/OtherInfo.fxml";
 }

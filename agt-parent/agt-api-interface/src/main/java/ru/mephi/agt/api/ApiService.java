@@ -7,7 +7,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import ru.mephi.agt.api.request.AddContactGuiRequest;
+import ru.mephi.agt.api.request.ContactGuiRequest;
 import ru.mephi.agt.api.request.IdGuiRequest;
 import ru.mephi.agt.api.request.IdListGuiRequest;
 import ru.mephi.agt.api.request.SendMessageGuiRequest;
@@ -43,7 +43,7 @@ public interface ApiService {
 
 	@Path("/addContact")
 	@POST
-	public BaseResponse addContact(AddContactGuiRequest request);
+	public BaseResponse addContact(ContactGuiRequest request);
 
 	@Path("/getContactsFor")
 	@POST
@@ -72,6 +72,10 @@ public interface ApiService {
 	@Path("/updateSelfInfo")
 	@POST
 	public BaseResponse updateSelfInfo(UserGuiRequest request);
+	
+	@Path("/updateContact")
+	@POST
+	public BaseResponse updateContact(ContactGuiRequest request);
 
 	@Path("/test")
 	@POST

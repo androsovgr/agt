@@ -29,7 +29,7 @@ public class LogUtil {
 		String transactionId = request != null ? request.getTransactionId()
 				: null;
 		LOGGER.debug("[{}] Method {} finished", transactionId, methodName);
-		LOGGER.debug("[{}] Method {} started with response {}", transactionId,
+		LOGGER.debug("[{}] Method {} finished with response {}", transactionId,
 				methodName, response);
 	}
 }

@@ -103,6 +103,20 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>com.zenjava</groupId>
+				<artifactId>javafx-maven-plugin</artifactId>
+				<version>8.1.2</version>
+				<!-- <executions> <execution> <id>package</id> <phase>install</phase> -->
+				<goals>
+					<goal>native</goal>
+				</goals>
+				<configuration>
+					<mainClass>ru.mephi.agt.desktop.MainApp</mainClass>
+					<vendor>MEPHI</vendor>
+				</configuration>
+				<!-- </execution> </executions> -->
+			</plugin>
 		</plugins>
 	</build>
 </project>

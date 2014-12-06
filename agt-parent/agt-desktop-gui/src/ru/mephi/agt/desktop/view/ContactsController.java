@@ -3,14 +3,19 @@ package ru.mephi.agt.desktop.view;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
+import javafx.stage.Stage;
 
+import org.controlsfx.control.Notifications;
+import org.controlsfx.dialog.Dialogs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +23,10 @@ import ru.mephi.agt.desktop.MainApp;
 import ru.mephi.agt.desktop.component.ContactListCell;
 import ru.mephi.agt.desktop.model.ContactModel;
 import ru.mephi.agt.desktop.model.extractor.ContactExtractor;
+import ru.mephi.agt.desktop.util.ControllerUtil;
+import ru.mephi.agt.desktop.util.ServerInteractor;
 import ru.mephi.agt.model.Status;
+import ru.mephi.agt.response.BaseResponse;
 
 public class ContactsController {
 
@@ -34,7 +42,19 @@ public class ContactsController {
 	@FXML
 	private ListView<ContactModel> unknownListView;
 
+	@FXML
+	private MenuItem chatMenuItem;
+	@FXML
+	private MenuItem infoMenuItem;
+	@FXML
+	private MenuItem renameMenuItem;
+	@FXML
+	private MenuItem searchMenuItem;
+	@FXML
+	private MenuItem selfInfoMenuItem;
+
 	private MainApp mainApp;
+	private Stage stage;
 
 	private ObservableList<ContactModel> onlineList;
 	private ObservableList<ContactModel> unknownList;
@@ -110,7 +130,7 @@ public class ContactsController {
 	private void showInfo(ActionEvent event) {
 		ContactModel selected = getSelected();
 		if (selected != null) {
-			mainApp.showInfoAbout(selected);
+			mainApp.showOtherInfo(selected.getUserId());
 		} else {
 			LOGGER.warn("Can't find selected item");
 		}
@@ -119,6 +139,33 @@ public class ContactsController {
 	@FXML
 	private void startSearch() {
 		mainApp.showSearchStage();
+	}
+
+	@FXML
+	private void updateContact() {
+		ContactModel selected = getSelected();
+		if (selected != null) {
+			Optional<String> dialogResponse = Dialogs.create().owner(stage)
+					.title("Изменение контакта")
+					.message("Введите желаемое имя контакта:")
+					.showTextInput(selected.getDisplayName());
+			if (dialogResponse.isPresent()) {
+				String displayName = dialogResponse.get();
+				BaseResponse response = ServerInteractor.updateContact(
+						displayName, selected.getUserId(),
+						selected.getContactId(), mainApp.getUid(),
+						mainApp.getOwnId());
+				if (ControllerUtil.handleResponse(response)) {
+					Notifications
+							.create()
+							.title("Обновление контакта")
+							.text("Контакт " + displayName
+									+ " успешно обновлен").showInformation();
+					mainApp.updateContactMapPutIntoContacts();
+				}
+			}
+
+		}
 	}
 
 	private ContactModel getSelected() {
@@ -174,6 +221,10 @@ public class ContactsController {
 			if (!unknownListView.getId().equals(listView.getId())) {
 				unknownListView.getSelectionModel().clearSelection();
 			}
+		} else {
+			offlineListView.getSelectionModel().clearSelection();
+			onlineListView.getSelectionModel().clearSelection();
+			unknownListView.getSelectionModel().clearSelection();
 		}
 	}
 
@@ -205,8 +256,25 @@ public class ContactsController {
 		unknownList.addAll(unknownContactModels);
 	}
 
+	@FXML
+	private void validateMenu() {
+		if (getSelected() == null) {
+			chatMenuItem.setDisable(true);
+			infoMenuItem.setDisable(true);
+			renameMenuItem.setDisable(true);
+		} else {
+			chatMenuItem.setDisable(false);
+			infoMenuItem.setDisable(false);
+			renameMenuItem.setDisable(false);
+		}
+	}
+
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
+	}
+
+	public void setStage(Stage stage) {
+		this.stage = stage;
 	}
 
 }

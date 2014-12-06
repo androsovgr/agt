@@ -69,4 +69,22 @@ public class ContactServiceImpl implements ContactService {
 		LogUtil.logFinished(LOGGER, methodName, request, response);
 		return response;
 	}
+
+	@Override
+	public BaseResponse updateContact(ContactRequest request) {
+		final String methodName = "updateContact";
+		LogUtil.logStarted(LOGGER, methodName, request);
+		BaseResponse response = null;
+		try {
+			em.merge(request.getContact());
+			em.flush();
+			response = new BaseResponse();
+		} catch (Exception e) {
+			LogUtil.logError(LOGGER, methodName, request, e);
+			response = new BaseResponse(ErrorCode.INTERNAL_ERROR,
+					"Can't update contact");
+		}
+		LogUtil.logFinished(LOGGER, methodName, request, response);
+		return response;
+	}
 }

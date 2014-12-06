@@ -14,12 +14,12 @@ public class Contact {
 	@Id
 	@Column(name = "contact_id")
 	private long contactId;
-	@Column(name = "owner_user_id")
+	@Column(name = "owner_user_id", updatable = false)
 	private long ownerUserId;
 	@Column(name = "display_name")
 	private String displayName;
 	@ManyToOne
-	@JoinColumn(name = "contact_user_id")
+	@JoinColumn(name = "contact_user_id", updatable = false)
 	private User user;
 
 	@Override

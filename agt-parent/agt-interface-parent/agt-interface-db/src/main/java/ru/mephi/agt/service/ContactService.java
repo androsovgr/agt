@@ -11,4 +11,6 @@ public interface ContactService {
 
 	public BaseResponse addContactFor(ContactRequest request);
 
+	public BaseResponse updateContact(ContactRequest request);
+
 }

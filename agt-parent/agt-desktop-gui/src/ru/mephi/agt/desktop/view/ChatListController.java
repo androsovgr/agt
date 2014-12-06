@@ -35,7 +35,7 @@ public class ChatListController {
 
 	public void startChat(ContactModel contactModel, boolean showWindow)
 			throws IOException {
-		if (messageTabControllerMap.containsKey(contactModel.getId())) {
+		if (messageTabControllerMap.containsKey(contactModel.getUserId())) {
 			if (showWindow) {
 				showOldChat(contactModel);
 			}
@@ -62,28 +62,28 @@ public class ChatListController {
 		MessagesController messagesController = loader.getController();
 		messagesController.setContact(contactModel);
 		messagesController.setMainApp(mainApp);
-		messageTabControllerMap.put(contactModel.getId(),
+		messageTabControllerMap.put(contactModel.getUserId(),
 				new MessageTabControllerBean(newTab, messagesController));
 	}
 
 	private void closeTab(Event e) {
 		Tab tab = (Tab) e.getSource();
 		ContactModel contactModel = (ContactModel) tab.getUserData();
-		messageTabControllerMap.remove(contactModel.getId());
+		messageTabControllerMap.remove(contactModel.getUserId());
 	}
 
 	private void showOldChat(ContactModel contactModel) {
-		Tab tab = messageTabControllerMap.get(contactModel.getId()).getTab();
+		Tab tab = messageTabControllerMap.get(contactModel.getUserId()).getTab();
 		chatList.getSelectionModel().select(tab);
 	}
 
 	public void handleMessage(ContactModel contactModel, Message message)
 			throws IOException {
-		if (!messageTabControllerMap.containsKey(contactModel.getId())) {
+		if (!messageTabControllerMap.containsKey(contactModel.getUserId())) {
 			startNewChat(contactModel, false);
 		}
 		MessageTabControllerBean messageTabControllerBean = messageTabControllerMap
-				.get(contactModel.getId());
+				.get(contactModel.getUserId());
 		MessagesController messageController = messageTabControllerBean
 				.getController();
 		messageController.handleMessage(message.getMessageTime(),

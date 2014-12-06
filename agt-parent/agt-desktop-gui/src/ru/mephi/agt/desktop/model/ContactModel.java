@@ -12,8 +12,9 @@ import ru.mephi.agt.model.Status;
 
 public class ContactModel {
 
+	private LongProperty contactIdProperty;
 	private BooleanProperty newMessagesProperty;
-	private LongProperty idProperty;
+	private LongProperty userIdProperty;
 	private StringProperty displayNameProperty;
 	private ObjectProperty<Status> statusProperty;
 
@@ -53,16 +54,17 @@ public class ContactModel {
 	}
 
 	public ContactModel() {
-		this(null, null, -1L, false);
+		this(null, null, 0L, false, 0);
 	}
 
 	public ContactModel(String displayName, Status status, Long id,
-			boolean newMessages) {
+			boolean newMessages, long contactId) {
 		super();
 		this.displayNameProperty = new SimpleStringProperty(displayName);
 		this.statusProperty = new SimpleObjectProperty<Status>(status);
-		this.idProperty = new SimpleLongProperty(id);
+		this.userIdProperty = new SimpleLongProperty(id);
 		this.newMessagesProperty = new SimpleBooleanProperty(newMessages);
+		this.contactIdProperty = new SimpleLongProperty(contactId);
 	}
 
 	public Status getStatus() {
@@ -71,10 +73,11 @@ public class ContactModel {
 
 	@Override
 	public String toString() {
-		return "ContactModel [newMessagesProperty=" + newMessagesProperty
-				+ ", idProperty=" + idProperty + ", displayNameProperty="
-				+ displayNameProperty + ", statusProperty=" + statusProperty
-				+ "]";
+		return "ContactModel [contactIdProperty=" + contactIdProperty
+				+ ", newMessagesProperty=" + newMessagesProperty
+				+ ", userIdProperty=" + userIdProperty
+				+ ", displayNameProperty=" + displayNameProperty
+				+ ", statusProperty=" + statusProperty + "]";
 	}
 
 	public void setStatus(Status status) {
@@ -109,16 +112,28 @@ public class ContactModel {
 		return newMessagesProperty;
 	}
 
-	public long getId() {
-		return idProperty.get();
+	public long getUserId() {
+		return userIdProperty.get();
 	}
 
-	public void setIdProperty(long idProperty) {
-		this.idProperty.set(idProperty);
+	public void setUserId(long userId) {
+		this.userIdProperty.set(userId);
 	}
 
 	public LongProperty idProperty() {
-		return idProperty;
+		return userIdProperty;
+	}
+
+	public final LongProperty contactIdProperty() {
+		return this.contactIdProperty;
+	}
+
+	public final long getContactId() {
+		return this.contactIdProperty.get();
+	}
+
+	public final void setContactId(long contactId) {
+		this.contactIdProperty.set(contactId);
 	}
 
 }

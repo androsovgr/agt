@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -141,7 +142,15 @@ public class SearchController {
 	private void startChat() {
 		UserModel selected = searchTable.getSelectionModel().getSelectedItem();
 		if (selected != null) {
-			mainApp.startChatWith(selected);
+			mainApp.startChatWith(selected.getId());
+		}
+	}
+
+	@FXML
+	private void showInfo(ActionEvent event) {
+		UserModel selected = searchTable.getSelectionModel().getSelectedItem();
+		if (selected != null) {
+			mainApp.showOtherInfo(selected.getId());
 		}
 	}
 
@@ -155,8 +164,9 @@ public class SearchController {
 					.showTextInput(selected.getNick());
 			if (dialogResponse.isPresent()) {
 				String displayName = dialogResponse.get();
-				BaseResponse response = ServerInteractor.addUser(displayName,
-						selected, mainApp.getUid(), mainApp.getOwnId());
+				BaseResponse response = ServerInteractor.addContact(
+						displayName, selected.getId(), mainApp.getUid(),
+						mainApp.getOwnId());
 				if (ControllerUtil.handleResponse(response)) {
 					Notifications
 							.create()
