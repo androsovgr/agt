@@ -14,7 +14,7 @@
         <dependent-module archiveName="agt-service-hazelcast.jar" deploy-path="/" handle="module:/resource/agt-service-hazelcast/agt-service-hazelcast">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="agt-common-beans.jar" deploy-path="/lib" handle="module:/classpath/var/M2_REPO/ru/mephi/agt/agt-common-beans/0.0.1-SNAPSHOT/agt-common-beans-0.0.1-SNAPSHOT.jar">
+        <dependent-module archiveName="agt-common-beans.jar" deploy-path="/lib" handle="module:/resource/agt-common-beans/agt-common-beans">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="agt-intarface-orchestration.jar" deploy-path="/lib" handle="module:/resource/agt-intarface-orchestration/agt-intarface-orchestration">

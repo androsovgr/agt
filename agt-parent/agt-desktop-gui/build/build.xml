@@ -8,7 +8,6 @@
 				<file name="${basedir}" />
 			</filelist>
 		</path>
-
 		<taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpathref="fxant" />
 	</target>
 	<target name="setup-staging-area">
@@ -217,7 +216,7 @@
 			</fileset>
 		</copy>
 
-		<javac includeantruntime="false" source="1.8" target="1.8" srcdir="build/src" destdir="build/classes" encoding="Cp1251">
+		<javac includeantruntime="false" source="1.8" target="1.8" srcdir="build/src" destdir="build/classes" encoding="Cp1251"> 
 			<classpath>
 				<fileset dir="build/libs">
 					<include name="*" />
@@ -237,7 +236,6 @@
 	<target name="do-deploy" depends="setup-staging-area, do-compile, init-fx-tasks">
 		<delete file="dist" />
 		<delete file="deploy" />
-
 		<mkdir dir="dist" />
 		<mkdir dir="dist/libs" />
 
@@ -255,7 +253,6 @@
 		</fx:resources>
 
 		<fx:application id="fxApplication" name="AGT-messenger" mainClass="ru.mephi.agt.desktop.MainApp" version="1.0" />
-
 		<mkdir dir="build/classes/META-INF" />
 
 
